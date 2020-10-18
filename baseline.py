@@ -3,13 +3,13 @@ import matplotlib as plt
 import statsmodels as st
 
 # Data Files
-exchange_1 = pd.read_csv("./Updated files/Exchange1update.csv")
+exchange_1 = pd.read_csv("Updated/Exchange1update.csv")
 exchange_1["date"] = exchange_1.Date.apply(lambda x: exchange_1.to_datetime(x).strftime('%d/%m/%Y %H:%M')).dt.date
 
-exchange_2 = pd.read_csv("./Updated files/Exchange2update.csv")
+exchange_2 = pd.read_csv("Updated/Exchange2update.csv")
 exchange_2["date"] = exchange_2.Date.apply(lambda x: exchange_2.to_datetime(x).strftime('%d/%m/%Y %H:%M')).dt.date
 
-exchange_3 = pd.read_csv("./Updated files/Exchange3update.csv")
+exchange_3 = pd.read_csv("Updated/Exchange3update.csv")
 exchange_3["date"] = exchange_3.Date.apply(lambda x: exchange_3.to_datetime(x).strftime('%d/%m/%Y %H:%M')).dt.date
 
 data = [exchange_1, exchange_2, exchange_3]
