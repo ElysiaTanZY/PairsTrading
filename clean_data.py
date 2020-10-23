@@ -1,7 +1,6 @@
+import math
 import pandas as pd
 import re
-
-# TODO: Create one more column for log prices
 
 
 def clean_data(exchange_code):
@@ -77,6 +76,7 @@ def clean_data(exchange_code):
     fill_in_missing_delisting_returns(number_delisting_500, total_delisting_500, missing_delisting_500, df)
 
     new_file_name = "./Updated/Exchange" + str(exchange_code) + "update.csv"
+    df['LOG_PRC'] = df.apply(lambda row: math.log(row['PRC'], 10), axis = 1)
     df.to_csv(new_file_name)
 
     print("done")
