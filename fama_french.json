@@ -1,0 +1,2474 @@
+{
+  "Agriculture": {
+    "Agric production - crops": {
+      "start": 100,
+      "end": 199
+    },
+    "Agric production - livestock": {
+      "start": 200,
+      "end": 299
+    },
+    "Agricultural services": {
+      "start": 700,
+      "end": 799
+    },
+    "Commercial fishing": {
+      "start": 910,
+      "end": 919
+    },
+    "Prepared feeds for animals": {
+      "start": 2048,
+      "end": 2048
+    }
+  },
+  "Food Products": {
+    "Food and kindred products": {
+      "start": 2000,
+      "end": 2009
+    },
+    "Meat products": {
+      "start": 2010,
+      "end": 2019
+    },
+    "Dairy products": {
+      "start": 2020,
+      "end": 2029
+    },
+    "Canned-preserved fruits-vegs": {
+      "start": 2030,
+      "end": 2039
+    },
+    "Flour and other grain mill products": {
+      "start": 2040,
+      "end": 2046
+    },
+    "Bakery products": {
+      "start": 2050,
+      "end": 2059
+    },
+    "Sugar and confectionery products": {
+      "start": 2060,
+      "end": 2063
+    },
+    "Fats and oils": {
+      "start": 2070,
+      "end": 2079
+    },
+    "Misc food preps": {
+      "start": 2090,
+      "end": 2092
+    },
+    "Roasted coffee": {
+      "start": 2095,
+      "end": 2095
+    },
+    "Misc food preparations": {
+      "start": 2098,
+      "end": 2099
+    }
+  },
+  "Candy and Soda": {
+    "Candy and other confectionery": {
+      "start": 2064,
+      "end": 2068
+    },
+    "Bottled-canned soft drinks": {
+      "start": 2086,
+      "end": 2086
+    },
+    "Flavoring syrup": {
+      "start": 2087,
+      "end": 2087
+    },
+    "Potato chips": {
+      "start": 2096,
+      "end": 2096
+    },
+    "Manufactured ice": {
+      "start": 2097,
+      "end": 2097
+    }
+  },
+  "Beer and Liquor": {
+    "Beverages": {
+      "start": 2080,
+      "end": 2080
+    },
+    "Malt beverages": {
+      "start": 2082,
+      "end": 2082
+    },
+    "Malt": {
+      "start": 2083,
+      "end": 2083
+    },
+    "Wine": {
+      "start": 2084,
+      "end": 2084
+    },
+    "Distilled and blended liquors": {
+      "start": 2085,
+      "end": 2085
+    }
+  },
+  "Tobacco Products": {
+    "Tobacco products": {
+      "start": 2100,
+      "end": 2199
+    }
+  },
+  "Recreation": {
+    "Fishing, hunting and trapping": {
+      "start": 920,
+      "end": 999
+    },
+    "Household audio visual equip": {
+      "start": 3650,
+      "end": 3651
+    },
+    "Phonographic records": {
+      "start": 3652,
+      "end": 3652
+    },
+    "Boat building and repair": {
+      "start": 3732,
+      "end": 3732
+    },
+    "Musical instruments": {
+      "start": 3930,
+      "end": 3931
+    },
+    "Toys": {
+      "start": 3940,
+      "end": 3949
+    }
+  },
+  "Entertainment": {
+    "Services - motion picture production and distribution": {
+      "start": 7800,
+      "end": 7829
+    },
+    "Services - motion picture theatres": {
+      "start": 7830,
+      "end": 7833
+    },
+    "Services - video rental": {
+      "start": 7840,
+      "end": 7841
+    },
+    "Services - amusement and recreation": {
+      "start": 7900,
+      "end": 7900
+    },
+    "Services - dance studios": {
+      "start": 7910,
+      "end": 7911
+    },
+    "Services - bands, entertainers": {
+      "start": 7920,
+      "end": 7929
+    },
+    "Services - bowling centers": {
+      "start": 7930,
+      "end": 7933
+    },
+    "Services - professional sports": {
+      "start": 7940,
+      "end": 7949
+    },
+    "Amusement and recreation services (?)": {
+      "start": 7980,
+      "end": 7980
+    },
+    "Services - misc entertainment": {
+      "start": 7990,
+      "end": 7999
+    }
+  },
+  "Printing and Publishing": {
+    "Printing publishing and allied": {
+      "start": 2700,
+      "end": 2709
+    },
+    "Newspapers: publishing-printing": {
+      "start": 2710,
+      "end": 2719
+    },
+    "Periodicals: publishing-printing": {
+      "start": 2720,
+      "end": 2729
+    },
+    "Books: publishing-printing": {
+      "start": 2730,
+      "end": 2739
+    },
+    "Misc publishing": {
+      "start": 2740,
+      "end": 2749
+    },
+    "Greeting card publishing": {
+      "start": 2770,
+      "end": 2771
+    },
+    "Book binding": {
+      "start": 2780,
+      "end": 2789
+    },
+    "Service industries for print trade": {
+      "start": 2790,
+      "end": 2799
+    }
+  },
+  "Consumer Goods": {
+    "Dog and cat food": {
+      "start": 2047,
+      "end": 2047
+    },
+    "Curtains, home furnishings": {
+      "start": 2391,
+      "end": 2392
+    },
+    "Household furniture": {
+      "start": 2510,
+      "end": 2519
+    },
+    "Misc furniture and fixtures": {
+      "start": 2590,
+      "end": 2599
+    },
+    "Soap and other detergents": {
+      "start": 2840,
+      "end": 2843
+    },
+    "Perfumes cosmetics": {
+      "start": 2844,
+      "end": 2844
+    },
+    "Luggage": {
+      "start": 3160,
+      "end": 3161
+    },
+    "Handbags and purses": {
+      "start": 3170,
+      "end": 3171
+    },
+    "Personal leather goods, except handbags": {
+      "start": 3172,
+      "end": 3172
+    },
+    "Leather goods": {
+      "start": 3190,
+      "end": 3199
+    },
+    "Pressed and blown glass": {
+      "start": 3229,
+      "end": 3229
+    },
+    "Pottery and related products": {
+      "start": 3260,
+      "end": 3260
+    },
+    "China and earthenware table articles": {
+      "start": 3262,
+      "end": 3263
+    },
+    "Pottery products": {
+      "start": 3269,
+      "end": 3269
+    },
+    "Glass products": {
+      "start": 3230,
+      "end": 3231
+    },
+    "Household appliances": {
+      "start": 3630,
+      "end": 3639
+    },
+    "Motorcycles, bicycles and parts (Harley and Huffy)": {
+      "start": 3750,
+      "end": 3751
+    },
+    "Misc inst, photo goods, watches": {
+      "start": 3800,
+      "end": 3800
+    },
+    "Photographic equip (Kodak etc, but also Xerox)": {
+      "start": 3860,
+      "end": 3861
+    },
+    "Watches clocks and parts": {
+      "start": 3870,
+      "end": 3873
+    },
+    "Jewelry-precious metals": {
+      "start": 3910,
+      "end": 3911
+    },
+    "Silverware": {
+      "start": 3914,
+      "end": 3914
+    },
+    "Jewelers findings materials": {
+      "start": 3915,
+      "end": 3915
+    },
+    "Costume jewelry and notions": {
+      "start": 3960,
+      "end": 3962
+    },
+    "Brooms and brushes": {
+      "start": 3991,
+      "end": 3991
+    },
+    "Burial caskets": {
+      "start": 3995,
+      "end": 3995
+    }
+  },
+  "Apparel": {
+    "Apparel and other finished products": {
+      "start": 2300,
+      "end": 2390
+    },
+    "Rubber and plastics footwear": {
+      "start": 3020,
+      "end": 3021
+    },
+    "Leather tanning and finishing": {
+      "start": 3100,
+      "end": 3111
+    },
+    "Boot, shoe cut stock, findings": {
+      "start": 3130,
+      "end": 3131
+    },
+    "Footware except rubber": {
+      "start": 3140,
+      "end": 3149
+    },
+    "Leather gloves and mittens": {
+      "start": 3150,
+      "end": 3151
+    },
+    "Fasteners, buttons, needles, pins": {
+      "start": 3963,
+      "end": 3965
+    }
+  },
+  "Healthcare": {
+    "Services - health": {
+      "start": 8000,
+      "end": 8099
+    }
+  },
+  "Medical Equipment": {
+    "X-ray, electromedical app": {
+      "start": 3693,
+      "end": 3693
+    },
+    "Surg and med instru": {
+      "start": 3840,
+      "end": 3849
+    },
+    "Ophthalmic goods": {
+      "start": 3850,
+      "end": 3851
+    }
+  },
+  "Pharmaceutical Products": {
+    "Drugs": {
+      "start": 2830,
+      "end": 2830
+    },
+    "Biological products": {
+      "start": 2831,
+      "end": 2831
+    },
+    "Medicinal chemicals": {
+      "start": 2833,
+      "end": 2833
+    },
+    "Pharmaceutical preparations": {
+      "start": 2834,
+      "end": 2834
+    },
+    "In vitro, in vivo diagnostics": {
+      "start": 2835,
+      "end": 2835
+    },
+    "Biological products, except diagnostics": {
+      "start": 2836,
+      "end": 2836
+    }
+  },
+  "Chemicals": {
+    "Chemicals and allied products": {
+      "start": 2800,
+      "end": 2809
+    },
+    "Industrial inorganical chems": {
+      "start": 2810,
+      "end": 2819
+    },
+    "Plastic material and synthetic resin": {
+      "start": 2820,
+      "end": 2829
+    },
+    "Paints": {
+      "start": 2850,
+      "end": 2859
+    },
+    "Industrial organic chems": {
+      "start": 2860,
+      "end": 2869
+    },
+    "Agriculture chemicals": {
+      "start": 2870,
+      "end": 2879
+    },
+    "Misc chemical products": {
+      "start": 2890,
+      "end": 2899
+    }
+  },
+  "Rubber and Plastic Products": {
+    "Reclaimed rubber": {
+      "start": 3031,
+      "end": 3031
+    },
+    "Rubber and plastic hose and belting": {
+      "start": 3041,
+      "end": 3041
+    },
+    "Gaskets, hoses, etc": {
+      "start": 3050,
+      "end": 3053
+    },
+    "Fabricated rubber products": {
+      "start": 3060,
+      "end": 3069
+    },
+    "Misc rubber products (?)": {
+      "start": 3070,
+      "end": 3079
+    },
+    "Misc plastic products": {
+      "start": 3080,
+      "end": 3089
+    },
+    "Misc rubber and plastic products (?)": {
+      "start": 3090,
+      "end": 3099
+    }
+  },
+  "Textiles": {
+    "Textile mill products": {
+      "start": 2200,
+      "end": 2269
+    },
+    "Floor covering mills": {
+      "start": 2270,
+      "end": 2279
+    },
+    "Yarn and thread mills": {
+      "start": 2280,
+      "end": 2284
+    },
+    "Misc textile goods": {
+      "start": 2290,
+      "end": 2295
+    },
+    "Nonwoven fabrics": {
+      "start": 2297,
+      "end": 2297
+    },
+    "Cordage and twine": {
+      "start": 2298,
+      "end": 2298
+    },
+    "Misc textile products": {
+      "start": 2299,
+      "end": 2299
+    },
+    "Textile bags, canvas products": {
+      "start": 2393,
+      "end": 2395
+    },
+    "Misc textile products": {
+      "start": 2397,
+      "end": 2399
+    }
+  },
+  "Construction Materials": {
+    "Forestry": {
+      "start": 800,
+      "end": 899
+    },
+    "Lumber and wood products": {
+      "start": 2400,
+      "end": 2439
+    },
+    "Wood buildings-mobile homes": {
+      "start": 2450,
+      "end": 2459
+    },
+    "Misc wood products": {
+      "start": 2490,
+      "end": 2499
+    },
+    "Building paper and board mills": {
+      "start": 2660,
+      "end": 2661
+    },
+    "Paving and roofing materials": {
+      "start": 2950,
+      "end": 2952
+    },
+    "Stone, clay, glass, concrete etc": {
+      "start": 3200,
+      "end": 3200
+    },
+    "Flat glass": {
+      "start": 3210,
+      "end": 3211
+    },
+    "Cement hydraulic": {
+      "start": 3240,
+      "end": 3241
+    },
+    "Structural clay prods": {
+      "start": 3250,
+      "end": 3259
+    },
+    "Vitreous china plumbing fixtures": {
+      "start": 3261,
+      "end": 3261
+    },
+    "Porcelain electrical supply": {
+      "start": 3264,
+      "end": 3264
+    },
+    "Concrete gypsum and plaster": {
+      "start": 3270,
+      "end": 3275
+    },
+    "Cut stone and stone products": {
+      "start": 3280,
+      "end": 3281
+    },
+    "Abrasive and asbestos products": {
+      "start": 3290,
+      "end": 3293
+    },
+    "Non-metalic mineral products": {
+      "start": 3295,
+      "end": 3299
+    },
+    "Handtools and hardware": {
+      "start": 3420,
+      "end": 3429
+    },
+    "Heating equip and plumbing fix": {
+      "start": 3430,
+      "end": 3433
+    },
+    "Fabicated struct metal products": {
+      "start": 3440,
+      "end": 3441
+    },
+    "Metal doors, frames": {
+      "start": 3442,
+      "end": 3442
+    },
+    "Architectual or ornamental metal work": {
+      "start": 3446,
+      "end": 3446
+    },
+    "Pre-fab metal buildings": {
+      "start": 3448,
+      "end": 3448
+    },
+    "Misc structural metal work": {
+      "start": 3449,
+      "end": 3449
+    },
+    "Screw machine products": {
+      "start": 3450,
+      "end": 3451
+    },
+    "Bolts, nuts screws": {
+      "start": 3452,
+      "end": 3452
+    },
+    "Misc fabricated metal products": {
+      "start": 3490,
+      "end": 3499
+    },
+    "Hard surface floor cover": {
+      "start": 3996,
+      "end": 3996
+    }
+  },
+  "Construction": {
+    "Build construction - general contractors": {
+      "start": 1500,
+      "end": 1511
+    },
+    "Gen building contractors - residential": {
+      "start": 1520,
+      "end": 1529
+    },
+    "Operative builders": {
+      "start": 1530,
+      "end": 1539
+    },
+    "Gen building contractors - non-residential": {
+      "start": 1540,
+      "end": 1549
+    },
+    "Heavy Construction - not building contractors": {
+      "start": 1600,
+      "end": 1699
+    },
+    "Construction - special contractors": {
+      "start": 1700,
+      "end": 1799
+    }
+  },
+  "Steel Works Etc": {
+    "Primary metal industries": {
+      "start": 3300,
+      "end": 3300
+    },
+    "Blast furnaces and steel works": {
+      "start": 3310,
+      "end": 3317
+    },
+    "Iron and steel foundries": {
+      "start": 3320,
+      "end": 3325
+    },
+    "Prim smelt-refin nonfer metals": {
+      "start": 3330,
+      "end": 3339
+    },
+    "Secondary smelt-refin nonfer metals": {
+      "start": 3340,
+      "end": 3341
+    },
+    "Rolling and drawing nonferous metals": {
+      "start": 3350,
+      "end": 3357
+    },
+    "Non-ferrous foundries and casting": {
+      "start": 3360,
+      "end": 3369
+    },
+    "Steel works etc": {
+      "start": 3370,
+      "end": 3379
+    },
+    "Misc primary metal products": {
+      "start": 3390,
+      "end": 3399
+    }
+  },
+  "Fabricated Products": {
+    "Fabricated metal, except machinery and trans eq": {
+      "start": 3400,
+      "end": 3400
+    },
+    "Fabricated plate work": {
+      "start": 3443,
+      "end": 3443
+    },
+    "Sheet metal work": {
+      "start": 3444,
+      "end": 3444
+    },
+    "Metal forgings and stampings": {
+      "start": 3460,
+      "end": 3469
+    },
+    "Coating and engraving": {
+      "start": 3470,
+      "end": 3479
+    }
+  },
+  "Machinery": {
+    "Engines and turbines": {
+      "start": 3510,
+      "end": 3519
+    },
+    "Farm and garden machinery": {
+      "start": 3520,
+      "end": 3529
+    },
+    "Constr, mining material handling machinery": {
+      "start": 3530,
+      "end": 3530
+    },
+    "Construction machinery": {
+      "start": 3531,
+      "end": 3531
+    },
+    "Mining machinery, except oil field": {
+      "start": 3532,
+      "end": 3532
+    },
+    "Oil field machinery": {
+      "start": 3533,
+      "end": 3533
+    },
+    "Elevators": {
+      "start": 3534,
+      "end": 3534
+    },
+    "Conveyors": {
+      "start": 3535,
+      "end": 3535
+    },
+    "Cranes, hoists": {
+      "start": 3536,
+      "end": 3536
+    },
+    "Machinery": {
+      "start": 3538,
+      "end": 3538
+    },
+    "Metalworking machinery": {
+      "start": 3540,
+      "end": 3549
+    },
+    "Special industry machinery": {
+      "start": 3550,
+      "end": 3559
+    },
+    "General industrial machinery": {
+      "start": 3560,
+      "end": 3569
+    },
+    "Refrig and service ind machines": {
+      "start": 3580,
+      "end": 3580
+    },
+    "Automatic vending machines": {
+      "start": 3581,
+      "end": 3581
+    },
+    "Commercial laundry and drycleaning machines": {
+      "start": 3582,
+      "end": 3582
+    },
+    "Air conditioning, heating, refrid eq": {
+      "start": 3585,
+      "end": 3585
+    },
+    "Measuring and dispensing pumps": {
+      "start": 3586,
+      "end": 3586
+    },
+    "Service industry machinery": {
+      "start": 3589,
+      "end": 3589
+    },
+    "Misc industrial and commercial equipment and mach": {
+      "start": 3590,
+      "end": 3599
+    }
+  },
+  "Electrical Equipment": {
+    "Elec mach eq and supply": {
+      "start": 3600,
+      "end": 3600
+    },
+    "Elec transmission": {
+      "start": 3610,
+      "end": 3613
+    },
+    "Electrical industrial appar": {
+      "start": 3620,
+      "end": 3621
+    },
+    "Electrical industrial appar": {
+      "start": 3623,
+      "end": 3629
+    },
+    "Electric lighting, wiring": {
+      "start": 3640,
+      "end": 3644
+    },
+    "Residential lighting fixtures": {
+      "start": 3645,
+      "end": 3645
+    },
+    "Commercial lighting": {
+      "start": 3646,
+      "end": 3646
+    },
+    "Lighting equipment": {
+      "start": 3648,
+      "end": 3649
+    },
+    "Communication equip": {
+      "start": 3660,
+      "end": 3660
+    },
+    "Miscellaneous electrical machinery and equip": {
+      "start": 3690,
+      "end": 3690
+    },
+    "Storage batteries": {
+      "start": 3691,
+      "end": 3692
+    },
+    "Electrical machinery and equip": {
+      "start": 3699,
+      "end": 3699
+    }
+  },
+  "Automobiles and Trucks": {
+    "Tire cord and fabric": {
+      "start": 2296,
+      "end": 2296
+    },
+    "Auto trim": {
+      "start": 2396,
+      "end": 2396
+    },
+    "Tires and inner tubes": {
+      "start": 3010,
+      "end": 3011
+    },
+    "Trucks, tractors, trailers": {
+      "start": 3537,
+      "end": 3537
+    },
+    "Vehicular lighting": {
+      "start": 3647,
+      "end": 3647
+    },
+    "Elec eq, internal combustion engines": {
+      "start": 3694,
+      "end": 3694
+    },
+    "Transportation equipment": {
+      "start": 3700,
+      "end": 3700
+    },
+    "Motor vehicles and motor vehicle equip": {
+      "start": 3710,
+      "end": 3710
+    },
+    "Motor vehicles and car bodies": {
+      "start": 3711,
+      "end": 3711
+    },
+    "Truck and bus bodies": {
+      "start": 3713,
+      "end": 3713
+    },
+    "Motor vehicle parts": {
+      "start": 3714,
+      "end": 3714
+    },
+    "Truck trailers": {
+      "start": 3715,
+      "end": 3715
+    },
+    "Motor homes": {
+      "start": 3716,
+      "end": 3716
+    },
+    "Travel trailers and campers": {
+      "start": 3792,
+      "end": 3792
+    },
+    "Misc trans equip": {
+      "start": 3790,
+      "end": 3791
+    },
+    "Misc trans equip": {
+      "start": 3799,
+      "end": 3799
+    }
+  },
+  "Aircraft": {
+    "Aircraft and parts": {
+      "start": 3720,
+      "end": 3720
+    },
+    "Aircraft": {
+      "start": 3721,
+      "end": 3721
+    },
+    "Aircraft engines, engine parts": {
+      "start": 3723,
+      "end": 3724
+    },
+    "Aircraft parts": {
+      "start": 3725,
+      "end": 3725
+    },
+    "Aircraft parts": {
+      "start": 3728,
+      "end": 3729
+    }
+  },
+  "Shipbuilding and Railroad Equipment": {
+    "Ship building and repair": {
+      "start": 3730,
+      "end": 3731
+    },
+    "Railroad Equipment": {
+      "start": 3740,
+      "end": 3743
+    }
+  },
+  "Defense": {
+    "Guided missiles and space vehicles": {
+      "start": 3760,
+      "end": 3769
+    },
+    "Tanks and tank components": {
+      "start": 3795,
+      "end": 3795
+    },
+    "Ordnance and accessories": {
+      "start": 3480,
+      "end": 3489
+    }
+  },
+  "Precious Metals": {
+    "Gold and silver ores": {
+      "start": 1040,
+      "end": 1049
+    }
+  },
+  "Non-Metallic and Industrial Metal Mining": {
+    "Metal mining": {
+      "start": 1000,
+      "end": 1009
+    },
+    "Iron ores": {
+      "start": 1010,
+      "end": 1019
+    },
+    "Copper ores": {
+      "start": 1020,
+      "end": 1029
+    },
+    "Lead and zinc ores": {
+      "start": 1030,
+      "end": 1039
+    },
+    "Bauxite and other aluminum ores": {
+      "start": 1050,
+      "end": 1059
+    },
+    "Ferroalloy ores": {
+      "start": 1060,
+      "end": 1069
+    },
+    "Mining": {
+      "start": 1070,
+      "end": 1079
+    },
+    "Mining services": {
+      "start": 1080,
+      "end": 1089
+    },
+    "Misc metal ores": {
+      "start": 1090,
+      "end": 1099
+    },
+    "Anthracite mining": {
+      "start": 1100,
+      "end": 1119
+    },
+    "Mining and quarrying non-metalic minerals": {
+      "start": 1400,
+      "end": 1499
+    }
+  },
+  "Coal": {
+    "Bituminous coal": {
+      "start": 1200,
+      "end": 1299
+    }
+  },
+  "Petroleum and Natural Gas": {
+    "Oil and gas extraction": {
+      "start": 1300,
+      "end": 1300
+    },
+    "Crude petroleum and natural gas": {
+      "start": 1310,
+      "end": 1319
+    },
+    "Natural gas liquids": {
+      "start": 1320,
+      "end": 1329
+    },
+    "Petroleum and natural gas": {
+      "start": 1330,
+      "end": 1339
+    },
+    "Petroleum and natural gas": {
+      "start": 1370,
+      "end": 1379
+    },
+    "Oil and gas field services": {
+      "start": 1380,
+      "end": 1380
+    },
+    "Drilling oil and gas wells": {
+      "start": 1381,
+      "end": 1381
+    },
+    "Oil-gas field exploration": {
+      "start": 1382,
+      "end": 1382
+    },
+    "Oil and gas field services": {
+      "start": 1389,
+      "end": 1389
+    },
+    "Petroleum refining": {
+      "start": 2900,
+      "end": 2912
+    },
+    "Misc petroleum products": {
+      "start": 2990,
+      "end": 2999
+    }
+  },
+  "Utilities": {
+    "Electric, gas, sanitary services": {
+      "start": 4900,
+      "end": 4900
+    },
+    "Electric services": {
+      "start": 4910,
+      "end": 4911
+    },
+    "Natural gas transmission": {
+      "start": 4920,
+      "end": 4922
+    },
+    "Natural gas transmission-distr": {
+      "start": 4923,
+      "end": 4923
+    },
+    "Natural gas distribution": {
+      "start": 4924,
+      "end": 4925
+    },
+    "Electric and other services combined": {
+      "start": 4930,
+      "end": 4931
+    },
+    "Gas and other services combined": {
+      "start": 4932,
+      "end": 4932
+    },
+    "Combination utilities": {
+      "start": 4939,
+      "end": 4939
+    },
+    "Water supply": {
+      "start": 4940,
+      "end": 4942
+    }
+  },
+  "Communication": {
+    "Communications": {
+      "start": 4800,
+      "end": 4800
+    },
+    "Telephone communications": {
+      "start": 4810,
+      "end": 4813
+    },
+    "Telegraph and other message communication": {
+      "start": 4820,
+      "end": 4822
+    },
+    "Radio-TV Broadcasters": {
+      "start": 4830,
+      "end": 4839
+    },
+    "Cable and other pay TV services": {
+      "start": 4840,
+      "end": 4841
+    },
+    "Communications": {
+      "start": 4880,
+      "end": 4889
+    },
+    "Communication services (Comsat)": {
+      "start": 4890,
+      "end": 4890
+    },
+    "Cable TV operators": {
+      "start": 4891,
+      "end": 4891
+    },
+    "Telephone interconnect": {
+      "start": 4892,
+      "end": 4892
+    },
+    "Communication services": {
+      "start": 4899,
+      "end": 4899
+    }
+  },
+  "Personal Services": {
+    "Rooming and boarding houses": {
+      "start": 7020,
+      "end": 7021
+    },
+    "Camps and recreational vehicle parks": {
+      "start": 7030,
+      "end": 7033
+    },
+    "Services - personal": {
+      "start": 7200,
+      "end": 7200
+    },
+    "Services - laundry, cleaners": {
+      "start": 7210,
+      "end": 7212
+    },
+    "Services - diaper service": {
+      "start": 7214,
+      "end": 7214
+    },
+    "Services - coin, op cleaners, dry cleaners": {
+      "start": 7215,
+      "end": 7216
+    },
+    "Services - carpet, upholstery cleaning": {
+      "start": 7217,
+      "end": 7217
+    },
+    "Services - laundry, cleaners": {
+      "start": 7219,
+      "end": 7219
+    },
+    "Services - photo studios, portrait": {
+      "start": 7220,
+      "end": 7221
+    },
+    "Services - beauty shops": {
+      "start": 7230,
+      "end": 7231
+    },
+    "Services - barber shops": {
+      "start": 7240,
+      "end": 7241
+    },
+    "Services - shoe repair": {
+      "start": 7250,
+      "end": 7251
+    },
+    "Services - funeral": {
+      "start": 7260,
+      "end": 7269
+    },
+    "Services - misc": {
+      "start": 7270,
+      "end": 7290
+    },
+    "Services - tax return": {
+      "start": 7291,
+      "end": 7291
+    },
+    "Services - misc": {
+      "start": 7292,
+      "end": 7299
+    },
+    "Services - photofinishing labs (School pictures)": {
+      "start": 7395,
+      "end": 7395
+    },
+    "Services - auto repair, services": {
+      "start": 7500,
+      "end": 7500
+    },
+    "Services - automobile parking": {
+      "start": 7520,
+      "end": 7529
+    },
+    "Services - auto repair shops": {
+      "start": 7530,
+      "end": 7539
+    },
+    "Services - auto services, except repair (car washes)": {
+      "start": 7540,
+      "end": 7549
+    },
+    "Services - Misc repair services": {
+      "start": 7600,
+      "end": 7600
+    },
+    "Services - Electrical repair shops": {
+      "start": 7620,
+      "end": 7620
+    },
+    "Services - Radio and TV repair shops": {
+      "start": 7622,
+      "end": 7622
+    },
+    "Services - Refridg and air conditioner repair": {
+      "start": 7623,
+      "end": 7623
+    },
+    "Services - Electrical repair shops": {
+      "start": 7629,
+      "end": 7629
+    },
+    "Services - Watch, clock and jewelry repair": {
+      "start": 7630,
+      "end": 7631
+    },
+    "Services - Reupholster, furniture repair": {
+      "start": 7640,
+      "end": 7641
+    },
+    "Services - Misc repair shops": {
+      "start": 7690,
+      "end": 7699
+    },
+    "Services - legal": {
+      "start": 8100,
+      "end": 8199
+    },
+    "Services - educational": {
+      "start": 8200,
+      "end": 8299
+    },
+    "Services - social services": {
+      "start": 8300,
+      "end": 8399
+    },
+    "Services - museums, galleries, botanic gardens": {
+      "start": 8400,
+      "end": 8499
+    },
+    "Services - membership organizations": {
+      "start": 8600,
+      "end": 8699
+    },
+    "Services - private households": {
+      "start": 8800,
+      "end": 8899
+    },
+    "Services - truck, auto rental and leasing": {
+      "start": 7510,
+      "end": 7515
+    }
+  },
+  "Business Services": {
+    "Commercial printing": {
+      "start": 2750,
+      "end": 2759
+    },
+    "Signs, advertising specialty": {
+      "start": 3993,
+      "end": 3993
+    },
+    "Services - industrial launderers": {
+      "start": 7218,
+      "end": 7218
+    },
+    "Services - business services": {
+      "start": 7300,
+      "end": 7300
+    },
+    "Services - advertising": {
+      "start": 7310,
+      "end": 7319
+    },
+    "Services - credit reporting agencies, collection services": {
+      "start": 7320,
+      "end": 7329
+    },
+    "Services - mailing, reproduction, commercial art": {
+      "start": 7330,
+      "end": 7339
+    },
+    "Services - services to dwellings, other buildings": {
+      "start": 7340,
+      "end": 7342
+    },
+    "Services - cleaning and builging maint": {
+      "start": 7349,
+      "end": 7349
+    },
+    "Services - misc equip rental and leasing": {
+      "start": 7350,
+      "end": 7351
+    },
+    "Services - medical equip rental": {
+      "start": 7352,
+      "end": 7352
+    },
+    "Services - heavy construction equip rental": {
+      "start": 7353,
+      "end": 7353
+    },
+    "Services - equip rental and leasing": {
+      "start": 7359,
+      "end": 7359
+    },
+    "Services - personnel supply services": {
+      "start": 7360,
+      "end": 7369
+    },
+    "Services - computer processing, data prep": {
+      "start": 7374,
+      "end": 7374
+    },
+    "Services - computer facilities management service": {
+      "start": 7376,
+      "end": 7376
+    },
+    "Services - computer rental and leasing": {
+      "start": 7377,
+      "end": 7377
+    },
+    "Services - computer maintanence and repair": {
+      "start": 7378,
+      "end": 7378
+    },
+    "Services - computer related services": {
+      "start": 7379,
+      "end": 7379
+    },
+    "Services - misc business services": {
+      "start": 7380,
+      "end": 7380
+    },
+    "Services - security": {
+      "start": 7381,
+      "end": 7382
+    },
+    "Services - news syndicates": {
+      "start": 7383,
+      "end": 7383
+    },
+    "Services - photofinishing labs": {
+      "start": 7384,
+      "end": 7384
+    },
+    "Services - telephone interconnections": {
+      "start": 7385,
+      "end": 7385
+    },
+    "Services - misc business services": {
+      "start": 7389,
+      "end": 7390
+    },
+    "Services - RandD labs": {
+      "start": 7391,
+      "end": 7391
+    },
+    "Services - management consulting and PR": {
+      "start": 7392,
+      "end": 7392
+    },
+    "Services - detective and protective (ADT)": {
+      "start": 7393,
+      "end": 7393
+    },
+    "Services - equipment rental and leasing": {
+      "start": 7394,
+      "end": 7394
+    },
+    "Services - trading stamp services": {
+      "start": 7396,
+      "end": 7396
+    },
+    "Services - commercial testing labs": {
+      "start": 7397,
+      "end": 7397
+    },
+    "Services - business services": {
+      "start": 7399,
+      "end": 7399
+    },
+    "Services - trailer rental and leasing": {
+      "start": 7519,
+      "end": 7519
+    },
+    "Services - engineering, accounting, research, management": {
+      "start": 8700,
+      "end": 8700
+    },
+    "Services - engineering, accounting, surveying": {
+      "start": 8710,
+      "end": 8713
+    },
+    "Services - accounting, auditing, bookkeeping": {
+      "start": 8720,
+      "end": 8721
+    },
+    "Services - research, development, testing labs": {
+      "start": 8730,
+      "end": 8734
+    },
+    "Services - management, public relations, consulting": {
+      "start": 8740,
+      "end": 8748
+    },
+    "Services - misc": {
+      "start": 8900,
+      "end": 8910
+    },
+    "Services - engineering and architect": {
+      "start": 8911,
+      "end": 8911
+    },
+    "Services - misc": {
+      "start": 8920,
+      "end": 8999
+    },
+    "Warehousing and storage": {
+      "start": 4220,
+      "end": 4229
+    }
+  },
+  "Computer Hardware": {
+    "Office computers": {
+      "start": 3570,
+      "end": 3579
+    },
+    "Computers": {
+      "start": 3680,
+      "end": 3680
+    },
+    "Computers - mini": {
+      "start": 3681,
+      "end": 3681
+    },
+    "Computers - mainframe": {
+      "start": 3682,
+      "end": 3682
+    },
+    "Computers - terminals": {
+      "start": 3683,
+      "end": 3683
+    },
+    "Computers - disk and tape drives": {
+      "start": 3684,
+      "end": 3684
+    },
+    "Computers - optical scanners": {
+      "start": 3685,
+      "end": 3685
+    },
+    "Computers - graphics": {
+      "start": 3686,
+      "end": 3686
+    },
+    "Computers - office automation systems": {
+      "start": 3687,
+      "end": 3687
+    },
+    "Computers - peripherals": {
+      "start": 3688,
+      "end": 3688
+    },
+    "Computers - equipment": {
+      "start": 3689,
+      "end": 3689
+    },
+    "Magnetic and optical recording media": {
+      "start": 3695,
+      "end": 3695
+    }
+  },
+  "Computer Software": {
+    "Services - computer programming and data process": {
+      "start": 7370,
+      "end": 7372
+    },
+    "Services - information retrieval services": {
+      "start": 7375,
+      "end": 7375
+    },
+    "Computer integrated systems design": {
+      "start": 7373,
+      "end": 7373
+    }
+  },
+  "Electronic Equipment": {
+    "Industrial controls": {
+      "start": 3622,
+      "end": 3622
+    },
+    "Telephone and telegraph apparatus": {
+      "start": 3661,
+      "end": 3661
+    },
+    "Communications equipment": {
+      "start": 3662,
+      "end": 3662
+    },
+    "Radio TV comm equip and apparatus": {
+      "start": 3663,
+      "end": 3663
+    },
+    "Search, navigation, guidance systems": {
+      "start": 3664,
+      "end": 3664
+    },
+    "Training equipment and simulators": {
+      "start": 3665,
+      "end": 3665
+    },
+    "Alarm and signaling products": {
+      "start": 3666,
+      "end": 3666
+    },
+    "Communication equipment": {
+      "start": 3669,
+      "end": 3669
+    },
+    "Electronic components": {
+      "start": 3670,
+      "end": 3679
+    },
+    "Search, detection, navigation, guidance": {
+      "start": 3810,
+      "end": 3810
+    },
+    "Search, detection, navigation, guidance": {
+      "start": 3812,
+      "end": 3812
+    }
+  },
+  "Measuring and Control Equipment": {
+    "Engr lab and research equipment": {
+      "start": 3811,
+      "end": 3811
+    },
+    "Measuring and controlling equipment": {
+      "start": 3820,
+      "end": 3820
+    },
+    "Lab apparatus and furniture": {
+      "start": 3821,
+      "end": 3821
+    },
+    "Automatic controls - Envir and applic": {
+      "start": 3822,
+      "end": 3822
+    },
+    "Industrial measurement instru": {
+      "start": 3823,
+      "end": 3823
+    },
+    "Totalizing fluid meters": {
+      "start": 3824,
+      "end": 3824
+    },
+    "Elec meas and test instr": {
+      "start": 3825,
+      "end": 3825
+    },
+    "Lab analytical instruments": {
+      "start": 3826,
+      "end": 3826
+    },
+    "Optical instr and lenses": {
+      "start": 3827,
+      "end": 3827
+    },
+    "Meas and control devices": {
+      "start": 3829,
+      "end": 3829
+    },
+    "Optical instr and lenses": {
+      "start": 3830,
+      "end": 3839
+    }
+  },
+  "Business Supplies": {
+    "Office furniture and fixtures": {
+      "start": 2520,
+      "end": 2549
+    },
+    "Paper and allied products": {
+      "start": 2600,
+      "end": 2639
+    },
+    "Paper and allied products": {
+      "start": 2670,
+      "end": 2699
+    },
+    "Manifold business forms": {
+      "start": 2760,
+      "end": 2761
+    },
+    "Pens pencils and office supplies": {
+      "start": 3950,
+      "end": 3955
+    }
+  },
+  "Shipping Containers": {
+    "Wood containers": {
+      "start": 2440,
+      "end": 2449
+    },
+    "Paperboard containers, boxes, drums, tubs": {
+      "start": 2640,
+      "end": 2659
+    },
+    "Glass containers": {
+      "start": 3220,
+      "end": 3221
+    },
+    "Metal cans and shipping containers": {
+      "start": 3410,
+      "end": 3412
+    }
+  },
+  "Transportation": {
+    "Railroads-line haul": {
+      "start": 4000,
+      "end": 4013
+    },
+    "Railway express service": {
+      "start": 4040,
+      "end": 4049
+    },
+    "Transit and passenger trans": {
+      "start": 4100,
+      "end": 4100
+    },
+    "Local passenger trans": {
+      "start": 4110,
+      "end": 4119
+    },
+    "Taxicabs": {
+      "start": 4120,
+      "end": 4121
+    },
+    "Intercity bus trans (Greyhound)": {
+      "start": 4130,
+      "end": 4131
+    },
+    "Bus charter": {
+      "start": 4140,
+      "end": 4142
+    },
+    "School buses": {
+      "start": 4150,
+      "end": 4151
+    },
+    "Motor vehicle terminals, service facilities": {
+      "start": 4170,
+      "end": 4173
+    },
+    "Misc transit and passenger transportation": {
+      "start": 4190,
+      "end": 4199
+    },
+    "Motor freight trans, warehousing": {
+      "start": 4200,
+      "end": 4200
+    },
+    "Trucking": {
+      "start": 4210,
+      "end": 4219
+    },
+    "Terminal facilities - motor freight": {
+      "start": 4230,
+      "end": 4231
+    },
+    "Transportation": {
+      "start": 4240,
+      "end": 4249
+    },
+    "Water transport": {
+      "start": 4400,
+      "end": 4499
+    },
+    "Air transportation": {
+      "start": 4500,
+      "end": 4599
+    },
+    "Pipelines, except natural gas": {
+      "start": 4600,
+      "end": 4699
+    },
+    "Transportation services": {
+      "start": 4700,
+      "end": 4700
+    },
+    "Freight forwarding": {
+      "start": 4710,
+      "end": 4712
+    },
+    "Travel agencies, etc": {
+      "start": 4720,
+      "end": 4729
+    },
+    "Arrange trans - freight and cargo": {
+      "start": 4730,
+      "end": 4739
+    },
+    "Rental of railroad cars": {
+      "start": 4740,
+      "end": 4749
+    },
+    "Misc services incidental to trans": {
+      "start": 4780,
+      "end": 4780
+    },
+    "Inspection and weighing services": {
+      "start": 4782,
+      "end": 4782
+    },
+    "Packing and crating": {
+      "start": 4783,
+      "end": 4783
+    },
+    "Fixed facilities for vehicles, not elsewhere classified": {
+      "start": 4784,
+      "end": 4784
+    },
+    "Motor vehicle inspection": {
+      "start": 4785,
+      "end": 4785
+    },
+    "Transportation services": {
+      "start": 4789,
+      "end": 4789
+    }
+  },
+  "Wholesale": {
+    "Wholesale - durable goods": {
+      "start": 5000,
+      "end": 5000
+    },
+    "Wholesale - autos and parts": {
+      "start": 5010,
+      "end": 5015
+    },
+    "Wholesale - furniture and home furnishings": {
+      "start": 5020,
+      "end": 5023
+    },
+    "Wholesale - lumber and construction materials": {
+      "start": 5030,
+      "end": 5039
+    },
+    "Wholesale - professional and commercial equipment and supplies": {
+      "start": 5040,
+      "end": 5042
+    },
+    "Wholesale - photographic equipment": {
+      "start": 5043,
+      "end": 5043
+    },
+    "Wholesale - office equipment": {
+      "start": 5044,
+      "end": 5044
+    },
+    "Wholesale - computers": {
+      "start": 5045,
+      "end": 5045
+    },
+    "Wholesale - commerical equip": {
+      "start": 5046,
+      "end": 5046
+    },
+    "Wholesale - medical, dental equip": {
+      "start": 5047,
+      "end": 5047
+    },
+    "Wholesale - ophthalmic goods": {
+      "start": 5048,
+      "end": 5048
+    },
+    "Wholesale - professional equip and supplies": {
+      "start": 5049,
+      "end": 5049
+    },
+    "Wholesale - metals and minerals": {
+      "start": 5050,
+      "end": 5059
+    },
+    "Wholesale - electrical goods": {
+      "start": 5060,
+      "end": 5060
+    },
+    "Wholesale - electrical apparatus and equipment": {
+      "start": 5063,
+      "end": 5063
+    },
+    "Wholesale - electrical appliance TV and radio": {
+      "start": 5064,
+      "end": 5064
+    },
+    "Wholesale - electronic parts": {
+      "start": 5065,
+      "end": 5065
+    },
+    "Wholesale - hardware, plumbing, heating equip": {
+      "start": 5070,
+      "end": 5078
+    },
+    "Wholesale - machinery and equipment": {
+      "start": 5080,
+      "end": 5080
+    },
+    "Wholesale - machinery and equipment (?)": {
+      "start": 5081,
+      "end": 5081
+    },
+    "Wholesale - construction and mining equipment": {
+      "start": 5082,
+      "end": 5082
+    },
+    "Wholesale - farm and garden machinery": {
+      "start": 5083,
+      "end": 5083
+    },
+    "Wholesale - industrial machinery and equipment": {
+      "start": 5084,
+      "end": 5084
+    },
+    "Wholesale - industrial supplies": {
+      "start": 5085,
+      "end": 5085
+    },
+    "Wholesale - machinery and equipment (?)": {
+      "start": 5086,
+      "end": 5087
+    },
+    "Wholesale - trans eq except motor vehicles": {
+      "start": 5088,
+      "end": 5088
+    },
+    "Wholesale - misc durable goods": {
+      "start": 5090,
+      "end": 5090
+    },
+    "Wholesale - sporting goods, toys": {
+      "start": 5091,
+      "end": 5092
+    },
+    "Wholesale - scrap and waste materials": {
+      "start": 5093,
+      "end": 5093
+    },
+    "Wholesale - jewelry and watches": {
+      "start": 5094,
+      "end": 5094
+    },
+    "Wholesale - durable goods": {
+      "start": 5099,
+      "end": 5099
+    },
+    "Wholesale - nondurable goods": {
+      "start": 5100,
+      "end": 5100
+    },
+    "Wholesale - paper and paper products": {
+      "start": 5110,
+      "end": 5113
+    },
+    "Wholesale - drugs and propietary": {
+      "start": 5120,
+      "end": 5122
+    },
+    "Wholesale - apparel": {
+      "start": 5130,
+      "end": 5139
+    },
+    "Wholesale - groceries and related prods": {
+      "start": 5140,
+      "end": 5149
+    },
+    "Wholesale - farm products": {
+      "start": 5150,
+      "end": 5159
+    },
+    "Wholesale - chemicals and allied prods": {
+      "start": 5160,
+      "end": 5169
+    },
+    "Wholesale - petroleum and petro prods": {
+      "start": 5170,
+      "end": 5172
+    },
+    "Wholesale - beer, wine": {
+      "start": 5180,
+      "end": 5182
+    },
+    "Wholesale - non-durable goods": {
+      "start": 5190,
+      "end": 5199
+    }
+  },
+  "Retail": {
+    "Retail - bldg material, hardware, garden": {
+      "start": 5200,
+      "end": 5200
+    },
+    "Retail - lumber and other building mat": {
+      "start": 5210,
+      "end": 5219
+    },
+    "Retail": {
+      "start": 5220,
+      "end": 5229
+    },
+    "Retail - paint, glass, wallpaper": {
+      "start": 5230,
+      "end": 5231
+    },
+    "Retail - hardward stores": {
+      "start": 5250,
+      "end": 5251
+    },
+    "Retail - nurseries, lawn, garden stores": {
+      "start": 5260,
+      "end": 5261
+    },
+    "Retail - mobile home dealers": {
+      "start": 5270,
+      "end": 5271
+    },
+    "Retail - general merchandise stores": {
+      "start": 5300,
+      "end": 5300
+    },
+    "Retail - department stores": {
+      "start": 5310,
+      "end": 5311
+    },
+    "Retail - general merchandise stores (?)": {
+      "start": 5320,
+      "end": 5320
+    },
+    "Retail - variety stores": {
+      "start": 5330,
+      "end": 5331
+    },
+    "Retail - catalog showroom": {
+      "start": 5334,
+      "end": 5334
+    },
+    "Retail": {
+      "start": 5340,
+      "end": 5349
+    },
+    "Retail - Misc general merchandise stores": {
+      "start": 5390,
+      "end": 5399
+    },
+    "Retail - food stores": {
+      "start": 5400,
+      "end": 5400
+    },
+    "Retail - grocery stores": {
+      "start": 5410,
+      "end": 5411
+    },
+    "Retail - convenience stores": {
+      "start": 5412,
+      "end": 5412
+    },
+    "Retail - meat, fish mkt": {
+      "start": 5420,
+      "end": 5429
+    },
+    "Retail - fruite and vegatable markets": {
+      "start": 5430,
+      "end": 5439
+    },
+    "Retail - candy, nut, confectionary stores": {
+      "start": 5440,
+      "end": 5449
+    },
+    "Retail - dairy product stores": {
+      "start": 5450,
+      "end": 5459
+    },
+    "Retail - bakeries": {
+      "start": 5460,
+      "end": 5469
+    },
+    "Retail - miscellaneous food stores": {
+      "start": 5490,
+      "end": 5499
+    },
+    "Retail - auto dealers and gas stations": {
+      "start": 5500,
+      "end": 5500
+    },
+    "Retail - auto dealers": {
+      "start": 5510,
+      "end": 5529
+    },
+    "Retail - auto and home supply stores": {
+      "start": 5530,
+      "end": 5539
+    },
+    "Retail - gasoline service stations": {
+      "start": 5540,
+      "end": 5549
+    },
+    "Retail - boat dealers": {
+      "start": 5550,
+      "end": 5559
+    },
+    "Retail - recreational vehicle dealers": {
+      "start": 5560,
+      "end": 5569
+    },
+    "Retail - motorcycle dealers": {
+      "start": 5570,
+      "end": 5579
+    },
+    "Retail - automotive dealers": {
+      "start": 5590,
+      "end": 5599
+    },
+    "Retail - apparel and acces": {
+      "start": 5600,
+      "end": 5699
+    },
+    "Retail - home furniture and equipment stores": {
+      "start": 5700,
+      "end": 5700
+    },
+    "Retail - home furnishings stores": {
+      "start": 5710,
+      "end": 5719
+    },
+    "Retail - household appliance stores": {
+      "start": 5720,
+      "end": 5722
+    },
+    "Retail - radio, TV and consumer electronic stores": {
+      "start": 5730,
+      "end": 5733
+    },
+    "Retail - computer and computer software stores": {
+      "start": 5734,
+      "end": 5734
+    },
+    "Retail - record and tape stores": {
+      "start": 5735,
+      "end": 5735
+    },
+    "Retail - musical instrument stores": {
+      "start": 5736,
+      "end": 5736
+    },
+    "Retail": {
+      "start": 5750,
+      "end": 5799
+    },
+    "Retail - misc": {
+      "start": 5900,
+      "end": 5900
+    },
+    "Retail - drug and proprietary stores": {
+      "start": 5910,
+      "end": 5912
+    },
+    "Retail - liquor stores": {
+      "start": 5920,
+      "end": 5929
+    },
+    "Retail - used merchandise stores": {
+      "start": 5930,
+      "end": 5932
+    },
+    "Retail - misc": {
+      "start": 5940,
+      "end": 5940
+    },
+    "Retail - sporting goods stores, bike shops": {
+      "start": 5941,
+      "end": 5941
+    },
+    "Retail - book stores": {
+      "start": 5942,
+      "end": 5942
+    },
+    "Retail - stationery stores": {
+      "start": 5943,
+      "end": 5943
+    },
+    "Retail - jewelry stores": {
+      "start": 5944,
+      "end": 5944
+    },
+    "Retail - hobby, toy and game shops": {
+      "start": 5945,
+      "end": 5945
+    },
+    "Retail - camera and photo shop": {
+      "start": 5946,
+      "end": 5946
+    },
+    "Retail - gift, novelty": {
+      "start": 5947,
+      "end": 5947
+    },
+    "Retail - luggage": {
+      "start": 5948,
+      "end": 5948
+    },
+    "Retail - sewing and needlework stores": {
+      "start": 5949,
+      "end": 5949
+    },
+    "Retail": {
+      "start": 5950,
+      "end": 5959
+    },
+    "Retail - non-store retailers (catalogs, etc)": {
+      "start": 5960,
+      "end": 5969
+    },
+    "Retail": {
+      "start": 5970,
+      "end": 5979
+    },
+    "Retail - fuel and ice stores (Penn Central Co)": {
+      "start": 5980,
+      "end": 5989
+    },
+    "Retail - retail stores": {
+      "start": 5990,
+      "end": 5990
+    },
+    "Retail - florists": {
+      "start": 5992,
+      "end": 5992
+    },
+    "Retail - tobacco stores": {
+      "start": 5993,
+      "end": 5993
+    },
+    "Retail - newsdealers": {
+      "start": 5994,
+      "end": 5994
+    },
+    "Retail - computer stores": {
+      "start": 5995,
+      "end": 5995
+    },
+    "Retail stores": {
+      "start": 5999,
+      "end": 5999
+    }
+  },
+  "Restaraunts, Hotels and Motels": {
+    "Retail - eating places": {
+      "start": 5800,
+      "end": 5819
+    },
+    "Restaraunts, hotels, motels": {
+      "start": 5820,
+      "end": 5829
+    },
+    "Eating and drinking places": {
+      "start": 5890,
+      "end": 5899
+    },
+    "Hotels, other lodging places": {
+      "start": 7000,
+      "end": 7000
+    },
+    "Hotels motels": {
+      "start": 7010,
+      "end": 7019
+    },
+    "Membership hotels and lodging": {
+      "start": 7040,
+      "end": 7049
+    },
+    "Services - linen": {
+      "start": 7213,
+      "end": 7213
+    }
+  },
+  "Banking": {
+    "Depository institutions": {
+      "start": 6000,
+      "end": 6000
+    },
+    "Federal reserve banks": {
+      "start": 6010,
+      "end": 6019
+    },
+    "Commercial banks": {
+      "start": 6020,
+      "end": 6020
+    },
+    "National commercial banks": {
+      "start": 6021,
+      "end": 6021
+    },
+    "State banks - Fed Res System": {
+      "start": 6022,
+      "end": 6022
+    },
+    "State banks - not Fed Res System": {
+      "start": 6023,
+      "end": 6024
+    },
+    "National banks - Fed Res System": {
+      "start": 6025,
+      "end": 6025
+    },
+    "National banks - not Fed Res System": {
+      "start": 6026,
+      "end": 6026
+    },
+    "National banks, not FDIC": {
+      "start": 6027,
+      "end": 6027
+    },
+    "Banks": {
+      "start": 6028,
+      "end": 6029
+    },
+    "Savings institutions": {
+      "start": 6030,
+      "end": 6036
+    },
+    "Banks (?)": {
+      "start": 6040,
+      "end": 6059
+    },
+    "Credit unions": {
+      "start": 6060,
+      "end": 6062
+    },
+    "Foreign banks": {
+      "start": 6080,
+      "end": 6082
+    },
+    "Functions related to deposit banking": {
+      "start": 6090,
+      "end": 6099
+    },
+    "Nondepository credit institutions": {
+      "start": 6100,
+      "end": 6100
+    },
+    "Federal credit agencies": {
+      "start": 6110,
+      "end": 6111
+    },
+    "FNMA": {
+      "start": 6112,
+      "end": 6113
+    },
+    "SandLs": {
+      "start": 6120,
+      "end": 6129
+    },
+    "Agricultural credit institutions": {
+      "start": 6130,
+      "end": 6139
+    },
+    "Personal credit institutions (Beneficial)": {
+      "start": 6140,
+      "end": 6149
+    },
+    "Business credit institutions": {
+      "start": 6150,
+      "end": 6159
+    },
+    "Mortgage bankers": {
+      "start": 6160,
+      "end": 6169
+    },
+    "Finance lessors": {
+      "start": 6170,
+      "end": 6179
+    },
+    "Financial services": {
+      "start": 6190,
+      "end": 6199
+    }
+  },
+  "Insurance": {
+    "Insurance": {
+      "start": 6300,
+      "end": 6300
+    },
+    "Life insurance": {
+      "start": 6310,
+      "end": 6319
+    },
+    "Accident and health insurance": {
+      "start": 6320,
+      "end": 6329
+    },
+    "Fire, marine, property-casualty ins": {
+      "start": 6330,
+      "end": 6331
+    },
+    "Surety insurance": {
+      "start": 6350,
+      "end": 6351
+    },
+    "Title insurance": {
+      "start": 6360,
+      "end": 6361
+    },
+    "Pension, health, welfare funds": {
+      "start": 6370,
+      "end": 6379
+    },
+    "Insurance carriers": {
+      "start": 6390,
+      "end": 6399
+    },
+    "Insurance agents": {
+      "start": 6400,
+      "end": 6411
+    }
+  },
+  "Real Estate": {
+    "Real estate": {
+      "start": 6500,
+      "end": 6500
+    },
+    "Real estate operators": {
+      "start": 6510,
+      "end": 6510
+    },
+    "Operators - non-resident buildings": {
+      "start": 6512,
+      "end": 6512
+    },
+    "Operators - apartment buildings": {
+      "start": 6513,
+      "end": 6513
+    },
+    "Operators - other than apartment": {
+      "start": 6514,
+      "end": 6514
+    },
+    "Operators - residential mobile home": {
+      "start": 6515,
+      "end": 6515
+    },
+    "Lessors of real property": {
+      "start": 6517,
+      "end": 6519
+    },
+    "Real estate": {
+      "start": 6520,
+      "end": 6529
+    },
+    "Real estate agents and managers": {
+      "start": 6530,
+      "end": 6531
+    },
+    "Real estate dealers": {
+      "start": 6532,
+      "end": 6532
+    },
+    "Title abstract offices": {
+      "start": 6540,
+      "end": 6541
+    },
+    "Real estate developers": {
+      "start": 6550,
+      "end": 6553
+    },
+    "Real estate": {
+      "start": 6590,
+      "end": 6599
+    },
+    "Combined real estate, insurance, etc": {
+      "start": 6610,
+      "end": 6611
+    }
+  },
+  "Trading": {
+    "Security and commodity brokers": {
+      "start": 6200,
+      "end": 6299
+    },
+    "Holding, other investment offices": {
+      "start": 6700,
+      "end": 6700
+    },
+    "Holding offices": {
+      "start": 6710,
+      "end": 6719
+    },
+    "Investment offices": {
+      "start": 6720,
+      "end": 6722
+    },
+    "Management investment, closed-end": {
+      "start": 6723,
+      "end": 6723
+    },
+    "Unit investment trusts": {
+      "start": 6724,
+      "end": 6724
+    },
+    "Face-amount certificate offices": {
+      "start": 6725,
+      "end": 6725
+    },
+    "Unit inv trusts, closed-end": {
+      "start": 6726,
+      "end": 6726
+    },
+    "Trusts": {
+      "start": 6730,
+      "end": 6733
+    },
+    "Investment offices": {
+      "start": 6740,
+      "end": 6779
+    },
+    "Miscellaneous investing": {
+      "start": 6790,
+      "end": 6791
+    },
+    "Oil royalty traders": {
+      "start": 6792,
+      "end": 6792
+    },
+    "Commodity traders": {
+      "start": 6793,
+      "end": 6793
+    },
+    "Patent owners and lessors": {
+      "start": 6794,
+      "end": 6794
+    },
+    "Mineral royalty traders": {
+      "start": 6795,
+      "end": 6795
+    },
+    "REIT": {
+      "start": 6798,
+      "end": 6798
+    },
+    "Investors, NEC": {
+      "start": 6799,
+      "end": 6799
+    }
+  }
+}

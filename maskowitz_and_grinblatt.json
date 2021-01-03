@@ -1,0 +1,22 @@
+{
+     "Mining": {"start":1000, "end":1499},
+     "Food": {"start":2000, "end":2099},
+     "Apparel": {"start":2200, "end":2399},
+     "Paper": {"start":2600, "end":2699},
+     "Chemical": {"start":2800, "end":2899},
+     "Petroleum": {"start":2900, "end":2999},
+     "Construction": {"start":3200, "end":3299},
+     "Prim. Metals": {"start":3300, "end":3399},
+     "Fab. Metals": {"start":3400, "end":3499},
+     "Machinery": {"start":3500, "end":3599},
+     "Electrical Eq.": {"start":3600, "end":3699},
+     "Transportation Eq.": {"start":3700, "end":3799},
+     "Manufacturing": {"start":3800, "end":3999},
+     "Railroads": {"start":4000, "end":4099},
+     "Other Transport.": {"start":4100, "end":4799},
+     "Utilities": {"start":4900, "end":4999},
+     "Retail": {"start":5000, "end":5299},
+     "Dept. Stores": {"start":5300, "end":5399},
+     "Retail": {"start":5400, "end":5999},
+     "Financial": {"start":6000, "end":6999}
+ }
