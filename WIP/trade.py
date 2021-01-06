@@ -1,122 +1,153 @@
+import datetime
 import pandas as pd
+import re
 
 returns = []
 num_pairs_traded = 0
 
 
-def trade(chosen_pairs, _start_year_trade, data):
+def trade(chosen_pairs, trade_year, data):
     global returns
     global num_pairs_traded
 
     # Trade cointegrated pairs during trading period
     # Threshold to open positions: 2 SD away from mean
     # Threshold to close positions: 0.5 SD away from mean
-    # For shares that are delisted during the holding period, the position is immediately closed using the delisting
-    # returns
+    # For shares that are delisted during the holding period, the position is immediately closed using the last
+    # available price or the delisting returns
+
+    start_date = datetime.datetime(trade_year, 1, 1)
+    if start_date.weekday() == 6:
+        start_date = start_date + datetime.timedelta(days=1)
+    elif start_date.weekday() == 5:
+        start_date = start_date + datetime.timedelta(days=2)
+
+    start_date = pd.to_datetime(start_date)
+
+    end_date = datetime.datetime(trade_year, 12, 31)
+    if end_date.weekday() == 6:  # Monday = 0, Sunday = 6
+        end_date = end_date - datetime.timedelta(days=2)
+    elif end_date.dt.dayofweek == 5:
+        end_date = end_date - datetime.timedelta(days=1)
+
+    end_date = pd.to_datetime(end_date)
+
     for i in range(0, len(chosen_pairs)):
-        code_one, start_one, code_two, start_two, mean, std = chosen_pairs[i]
+        code_one, start_one, code_two, start_two, mean, std, beta = chosen_pairs[i]
 
-        start_date = pd.datetime.date(_start_year_trade, 1, 1)
-        if start_date.dt.dayofweek == 7:
-            start_date.apply(pd.DateOffset(1))
-        elif start_date.dt.dayofweek == 6:
-            start_date.apply(pd.DateOffset(2))
-
-        end_date = pd.datetime.date(_start_year_trade, 12, 31)
-        if end_date.dt.dayofweek == 7:
-            end_date.apply(pd.DateOffset(-2))
-        elif end_date.dt.dayofweek == 6:
-            end_date.apply(pd.DateOffset(-1))
-
-        open = False
+        is_open = False
+        is_delisted = False
         position = [] # Element one is short, element two is long
         num_trades = 0
 
-        curr_date = start_date
+        date_one = data.iloc[start_one]['date']
+        current_one = data.iloc[start_one]['PERMNO']
 
-        while (curr_date <= end_date):
+        date_two = data.iloc[start_two]['date']
+        current_two = data.iloc[start_two]['PERMNO']
+
+        while start_date <= date_one <= end_date and start_date <= date_two <= end_date:
+            if date_one == date_two and current_one == code_one and current_two == code_two:
+                if not 100 <= data.iloc[start_one]['DLSTCD'] < 200 or not 100 <= data.iloc[start_two]['DLSTCD'] < 200:
+                    # Stock delisted during trading period
+                    is_delisted = True
+                    break
+
+                norm_price_one = data.iloc[start_one]['LOG_PRC']
+                norm_price_two = data.iloc[start_two]['LOG_PRC']
+
+                if not bool(re.search('[1-9]+', str(norm_price_one))) or not bool(re.search('[1-9]+', str(norm_price_two))):
+                    # Either one stock has missing prices during trading period --> Close on last available prices
+                    break
+
+                spread = norm_price_one - norm_price_two
+
+                if is_open and abs(spread - mean) < 0.5*std:
+                    # close position and calculate returns
+                    # returns: (receive - pay) / initial amount received or paid
+                    price_one = data.iloc[start_one]['PRC']
+                    price_two = data.iloc[start_two]['PRC']
+
+                    short, long = position[0], position[1]
+
+                    if short[0] == 1:
+                        return_one = ((1 / beta) - (price_one * short[1])) / (1 / beta)
+                        return_two = ((price_two * long[1]) - 1)
+                    elif short[0] == 2:
+                        return_two = ((1 / beta) - (price_two * short[1])) / (1 / beta)
+                        return_one = ((price_one * long[1]) - 1)
+
+                    returns.append(return_one + return_two)
+                    is_open = False
+
+                elif not is_open and abs(spread - mean) > 2*std:
+                    '''
+                    If deviation is positive --> $1 long position for Stock 2 and $1/Beta short position for Stock 1
+                    If deviation is negative --> $1 long position for Stock 1 and $Beta short position for Stock 2
+                    '''
+
+                    price_one = data.iloc[start_one]['PRC']
+                    price_two = data.iloc[start_two]['PRC']
+
+                    if (spread - mean) > 0:
+                        position.append((1, (1 / beta) / price_one, price_one))
+                        position.append((2, 1 / price_two, price_two))
+                    elif (spread - mean) <= 0:
+                        position.append((2, beta / price_two, price_two))
+                        position.append((1, 1 / price_one, price_one))
+
+                    num_trades = num_trades + 1
+                    is_open = True
+            '''
+            else:
+                # Come in here means missing values for at least one of the stocks
+                # 4 choices: Either fill in at the start with the prev day prices or ignore the trade all together or align dates or close with previous aligned date prices
+                # TODO: align the two dates if possile - this should be fine??
+                # TODO: or just ignore this trade?
+                # I think it will never enter here right??
+                break
+            '''
+
+            start_one += 1
+            start_two += 1
+
             date_one = data.iloc[start_one]['date']
             current_one = data.iloc[start_one]['PERMNO']
 
             date_two = data.iloc[start_two]['date']
             current_two = data.iloc[start_two]['PERMNO']
 
-            if (date_one == date_two and current_one == code_one and current_two == code_two):
-                norm_price_one = data.iloc[start_one]['LOG_PRC']
-                norm_price_two = data.iloc[start_two]['LOG_PRC']
+        # At this point, there are 3 possible scenarios
+        # Scenario 1: Completed the whole trading period
+        # Scenario 2: At least one of the stock is delisted during the period
+        # Scenario 3: At least one of the stock has missing stock prices within the trading period
+        if is_open and is_delisted:
+            # close position based on last available price or delisting returns
+            short, long = position[0], position[1]
 
-                spread = norm_price_one - norm_price_two
-
-                if open and abs(spread - mean) < 0.5*std:
-                    # close position and calculate returns
-                    price_one = data.iloc[start_one]['PRC']
-                    price_two = data.iloc[start_two]['PRC']
-
-                    short, long = position[0], position[1]
-
-                    if (short[0] == 1):
-                        return_one = (short[2] - price_one) * short[1] / short[2]
-                        return_two = (price_two - long[2]) * long[1] / long[2]
-                    elif (short[0] == 2):
-                        return_two = (short[2] - price_two) * short[1] / short[2]
-                        return_one = (price_one - long[2]) * long[1] / long[2]
-
-                    returns.append(return_one + return_two)
-                    open = False
-
-                elif not open and abs(spread - mean) > 2*std:
-                    # one dollar short in higher priced stock and one dollar long in lower priced stock
-                    price_one = data.iloc[start_one]['PRC']
-                    price_two = data.iloc[start_two]['PRC']
-
-                    if price_one > price_two:
-                        position.append((1, 1 / price_one, price_one))
-                        position.append((2, 1 / price_two, price_two))
-                    elif price_one <= price_two:
-                        position.append((2, 1 / price_two, price_two))
-                        position.append((1, 1 / price_one, price_one))
-
-                    num_trades = num_trades + 1
-                    open = True
-            elif current_one != code_one or current_two != code_two or date_one != date_two:
-                if open:
-                    price_one = data.iloc[start_one]['PRC']
-                    price_two = data.iloc[start_two]['PRC']
-
-                    short, long = position[0], position[1]
-
-                    if (short[0] == 1):
-                        return_one = (short[2] - price_one) * short[1] / short[2]
-                        return_two = (price_two - long[2]) * long[1] / long[2]
-                    elif (short[0] == 2):
-                        return_two = (short[2] - price_two) * short[1] / short[2]
-                        return_one = (price_one - long[2]) * long[1] / long[2]
-
-                    delisting_code_one = data.iloc[start_one]['DLSTCD']
-                    delisting_code_two = data.iloc[start_two]['DLSTCD']
-
-                    if (delisting_code_one != 100):
-                        # Stock one was delisted
-                        return_one = data.iloc[start_one]['DLRET']
-
-                    elif (delisting_code_two != 100):
-                        # Stock two was delisted
-                        return_two = data.iloc[start_two]['DLRET']
-
-                    returns.append(return_one + return_two)
-                    open = False
-                    break
-
-            if curr_date.dt.dayofweek == 5:
-                curr_date.apply(pd.DateOffset(3))
+            if bool(re.search('[1-9]+', str(data.iloc[start_one]['PRC']))):
+                price_one = data.iloc[start_one]['PRC']
+                if short[0] == 1:
+                    return_one = ((1 / beta) - (price_one * short[1])) / (1 / beta)
+                elif short[0] == 2:
+                    return_one = ((price_one * long[1]) - 1)
             else:
-                curr_date.apply(pd.DateOffset(1))
+                return_one = data.iloc[start_one]['DLRET']
 
-            start_one += 1
-            start_two += 1
+            if bool(re.search('[1-9]+', str(data.iloc[start_two]['PRC']))):
+                price_two = data.iloc[start_two]['PRC']
 
-        if open:
-            # close position based on last trading day
+                if short[0] == 1:
+                    return_two = ((price_two * long[1]) - 1)
+                elif short[0] == 2:
+                    return_two = ((1 / beta) - (price_two * short[1])) / (1 / beta)
+            else:
+                return_two = data.iloc[start_two]['DLRET']
+
+            returns.append(return_one + return_two)
+
+        elif is_open:
+            # close position based on last trading day or last available price
             start_one -= 1
             start_two -= 1
 
@@ -126,11 +157,11 @@ def trade(chosen_pairs, _start_year_trade, data):
             short, long = position[0], position[1]
 
             if short[0] == 1:
-                return_one = (short[2] - price_one) * short[1] / short[2]
-                return_two = (price_two - long[2]) * long[1] / long[2]
+                return_one = ((1 / beta) - (price_one * short[1])) / (1 / beta)
+                return_two = ((price_two * long[1]) - 1)
             elif short[0] == 2:
-                return_two = (short[2] - price_two) * short[1] / short[2]
-                return_one = (price_one - long[2]) * long[1] / long[2]
+                return_two = ((1 / beta) - (price_two * short[1])) / (1 / beta)
+                return_one = ((price_one * long[1]) - 1)
 
             returns.append(return_one + return_two)
 
