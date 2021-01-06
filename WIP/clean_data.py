@@ -2,15 +2,16 @@ import math
 import pandas as pd
 import re
 
+# Cannot remove the rows with price == 0.0 because this will distort the data set --> Need to keep the dates in tack so
+# that we are able to correctly determine the PH in US when exchanges are not open and hence no price will be recorded
 
 def clean_data():
     # Step 1: For delisted stocks with missing delisting returns, fill in with a number
     # Numbers are filled in by making use of the average available delisting return for that code,
     # if empty and NASDAQ firm - Use -55% else use -30%
     # (Beaver, McNicholas, Price) JAE 2007
-    file_name = "../Backup/Data.csv"
-    df = pd.read_csv(file_name, usecols=['PERMNO', 'date', 'SICCD', 'DLSTCD', 'DLRETX', 'DLPRC', 'DLRET',
-                                         'PRC', 'VOL', 'RET', 'SHROUT', 'RETX'])
+    file_name = "/Backup/Data_NASDAQ.csv"
+    df = pd.read_csv(file_name)
 
     df['DLSTCD'].fillna(value=100, inplace=True)
     df['DLRETX'].fillna(value=0.0, inplace=True)
@@ -44,7 +45,7 @@ def clean_data():
     # Delisting Code: 400s - Issue Liquidated
     # Delisting Code: 500s - Dropped
     for i, row in df.iterrows():
-        print(row['DLSTCD'])
+        print(i)
         if 100 <= row['DLSTCD'] < 200:
             continue
         elif 200 <= row['DLSTCD'] < 300:
@@ -72,16 +73,15 @@ def clean_data():
                 total_delisting_500 += float(row['DLRET'])
                 number_delisting_500 += 1
 
-        if row['PRC'] < 0:
-            df.at[i, 'PRC'] = row['PRC'] * -1 # PRC is negative to indicate that it is a bid/ask average when there is no closing price
-
     fill_in_missing_delisting_returns(number_delisting_200, total_delisting_200, missing_delisting_200, df)
     fill_in_missing_delisting_returns(number_delisting_300, total_delisting_300, missing_delisting_300, df)
     fill_in_missing_delisting_returns(number_delisting_400, total_delisting_400, missing_delisting_400, df)
     fill_in_missing_delisting_returns(number_delisting_500, total_delisting_500, missing_delisting_500, df)
 
-    new_file_name = "../Updated/Data-update.csv"
-    df['LOG_PRC'] = df.apply(lambda row: math.log(row['PRC'], 10), axis = 1)
+    new_file_name = "/Updated/Data_NASDAQ.csv"
+    #df['LOG_PRC'] = df.apply(lambda row: math.log(row['PRC'], 10), axis = 1)
+    new_row = {'date':'01/01/2020'}
+    df = df.append(new_row, ignore_index=True)
     df.to_csv(new_file_name)
 
     print("done")
@@ -95,14 +95,16 @@ def fill_in_missing_delisting_returns(num, total, missing_list, df):
 
     for i in range(0, len(missing_list)):
         if average == 0:
-            df.at[i, 'DLRET'] = -0.3
+            df.at[i, 'DLRET'] = -0.55
         else:
             df.at[i, 'DLRET'] = average
 
 
-def check_data():
-    df = pd.read_csv("../Backup/Data.csv")
-    df2 = pd.read_csv("../Updated/Data-update.csv")
+def check_data(exchange_code):
+    print("Checking for exchange: " + str(exchange_code))
+
+    df = pd.read_csv("./Backup/Exchange" + str(exchange_code) + ".csv");
+    df2 = pd.read_csv("./Updated/Exchange" + str(exchange_code) + "update.csv");
 
     # Number of rows
     print(df.shape[0])
@@ -127,4 +129,4 @@ def check_data():
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     clean_data()
-    check_data()
+    #check_data(i)
