@@ -1,5 +1,6 @@
 import math
 import statistics
+import pandas as pd
 
 
 def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
@@ -22,14 +23,13 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
     # Sharpe ratio
     average = statistics.mean(returns)
     sd = statistics.stdev(returns)
-    # TODO: Need to find risk free rate - government bond yield (one year)
-    risk_free_rate = 0.03
+    risk_free_rate = generate_risk_free_rate()  # Using average of 1-year treasury yield over past 17 years
     sharpe_ratio = (average - risk_free_rate) / sd
 
     # Calmar ratio
     calmar_ratio = average / mdd
 
-    # Sortino ratio
+    # Sortino ratio (https://www.thebalance.com/what-is-downside-deviation-4590379)
     minimal_acceptable_return = average
 
     downside_returns = []
@@ -43,6 +43,20 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
     sortino_ratio = (average - risk_free_rate) / downside_deviation
 
     return
+
+
+def generate_risk_free_rate():
+    rates_data = pd.read_csv('../Backup/1yr_TreasuryYield(Daily).csv')  # https://fred.stlouisfed.org/series/DGS1
+    curr_year = rates_data[0]['DATE'].dt.year
+    rates = [rates_data[0]['Treasury Yield']]
+
+    for i, row in rates_data.iterrows():
+        if row['DATE'].dt.year != curr_year:
+            curr_year = row['DATE'].dt.year
+            rates.append(row['Treasury Yield'])
+
+    return statistics.mean(rates)
+
 
 if __name__ == '__main__':
     analyse_returns()
