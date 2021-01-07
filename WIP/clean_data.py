@@ -10,7 +10,7 @@ def clean_data():
     # Numbers are filled in by making use of the average available delisting return for that code,
     # if empty and NASDAQ firm - Use -55% else use -30%
     # (Beaver, McNicholas, Price) JAE 2007
-    file_name = "/Backup/Data_NASDAQ.csv"
+    file_name = "/Users/elysiatan/PycharmProjects/thesis/Backup/Data_NASDAQ.csv"
     df = pd.read_csv(file_name)
 
     df['DLSTCD'].fillna(value=100, inplace=True)
@@ -46,6 +46,9 @@ def clean_data():
     # Delisting Code: 500s - Dropped
     for i, row in df.iterrows():
         print(i)
+        if row['PRC'] < 0:
+            df.at[i, 'PRC'] = row['PRC'] * -1 # PRC is negative to indicate that it is a bid/ask average when there is no closing price
+
         if 100 <= row['DLSTCD'] < 200:
             continue
         elif 200 <= row['DLSTCD'] < 300:
@@ -78,7 +81,7 @@ def clean_data():
     fill_in_missing_delisting_returns(number_delisting_400, total_delisting_400, missing_delisting_400, df)
     fill_in_missing_delisting_returns(number_delisting_500, total_delisting_500, missing_delisting_500, df)
 
-    new_file_name = "/Updated/Data_NASDAQ.csv"
+    new_file_name = "/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv"
     #df['LOG_PRC'] = df.apply(lambda row: math.log(row['PRC'], 10), axis = 1)
     new_row = {'date':'01/01/2020'}
     df = df.append(new_row, ignore_index=True)
