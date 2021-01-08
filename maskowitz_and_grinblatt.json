@@ -15,7 +15,7 @@
      "Railroads": {"start":4000, "end":4099},
      "Other Transport.": {"start":4100, "end":4799},
      "Utilities": {"start":4900, "end":4999},
-     "Retail": {"start":5000, "end":5299},
+     "Wholesale": {"start":5000, "end":5299},
      "Dept. Stores": {"start":5300, "end":5399},
      "Retail": {"start":5400, "end":5999},
      "Financial": {"start":6000, "end":6999}
