@@ -19,12 +19,22 @@ exchange_3["date"] = exchange_3.Date.apply(lambda x: exchange_3.to_datetime(x).s
 date_cols = ['date']
 data = pd.read_csv("/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv", parse_dates=date_cols)
 shares = {} # {PERMNO: {year: (start, end)}}
-
+trading_calendar = {2000: 252, 2001: 248, 2002: 252, 2003: 252, 2004: 252, 2005: 252, 2006: 251, 2007: 251, 2008: 253,
+                   2009: 252, 2010: 252, 2011: 252, 2012: 250, 2013: 252, 2014: 252, 2015: 252, 2016: 252, 2017: 251,
+                   2018: 251, 2019: 252}
 
 def consolidate_shares(data):
     # Get the code of all shares that are available at some point in time in the exchange and the corresponding
     # start and end index for each year
     global shares
+
+    try:
+        with open('/Users/elysiatan/PycharmProjects/thesis/WIP/result.json') as json_file:
+            shares = json.load(json_file)
+            return
+    except FileNotFoundError:
+        pass
+
     curr_share = data.iloc[0]['PERMNO']
     shares[curr_share] = {}
     prev_year = data.iloc[0]['date'].year
@@ -32,7 +42,6 @@ def consolidate_shares(data):
 
     for j, row in data.iterrows():
         print(j)
-
         curr_year = row['date'].year
 
         if pd.notna(row['PERMNO']) and row['PERMNO'] != curr_share:
@@ -54,7 +63,6 @@ def consolidate_shares(data):
 
     with open('result.json', 'w') as fp:
         json.dump(shares, fp)
-    print(shares)
 
 
 def find_shares(start_year):
@@ -62,28 +70,51 @@ def find_shares(start_year):
     chosen_shares = []
 
     for permno, dates in shares.items():
-        if start_year not in dates.keys() or start_year + 1 not in dates.keys or start_year + 2 not in dates.keys():
+        print(permno)
+        if str(start_year) not in dates.keys() or str(start_year + 1) not in dates.keys() or \
+                str(start_year + 2) not in dates.keys() or str(start_year + 3) not in dates.keys():
             continue
 
         is_complete = True
         for i in range(start_year, start_year + 3):
-            start, end = dates[i]
+            start, end = dates[str(i)]
+
+            if (end - start) < (trading_calendar[i] - 1):
+                # Missing prices in between
+                is_complete = False
+                break
 
             end_date = datetime.datetime(i, 12, 31)
 
             if end_date.weekday() == 6:                # Monday = 0, Sunday = 6
                 end_date = end_date - datetime.timedelta(days=2)
-            elif end_date.dt.dayofweek == 5:
+            elif end_date.weekday() == 5:
                 end_date = end_date - datetime.timedelta(days=1)
 
             end_date = pd.to_datetime(end_date)
 
+            start_date = datetime.datetime(i, 1, 2)
+
+            if start_date.weekday() == 6:  # Monday = 0, Sunday = 6
+                start_date = start_date + datetime.timedelta(days=1)
+            elif start_date.weekday() == 5:
+                start_date = start_date + datetime.timedelta(days=2)
+
+            start_date = pd.to_datetime(start_date)
+
             indicator = True
             for j in range(start, end + 1):
-                if not bool(re.search('[1-9]+', str(data.iloc[j]['PRC']))) or not 100 <= data.iloc[j]['DLSTCD'] < 200:
+                if j == start and not data.iloc[j]['date'] == start_date:
+                    indicator = False
+                    break
+
+                if not data.iloc[j]['PRC'] > 1.0 or not 100 <= data.iloc[j]['DLSTCD'] < 200 or not int(data.iloc[j]['VOL']) > 0:
                     '''
-                    1. Discard the stock when it has missing price values
-                    2. Discard the stock when it is delisted during the formation period
+                    1. Discard the stock when it is delisted during the formation period
+                    2. Discard the stock when its price is less than $1 to avoid relatively high trading costs and 
+                    complications (Faff et al, 2016) 
+                    3. Discard the stock when its trading volume is 0 to replicate practical trading environments and 
+                    deal with only liquid stocks(Faff et al, 2016)
                     '''
                     indicator = False
                     break
@@ -100,7 +131,7 @@ def find_shares(start_year):
             If the industry code of the PERMNO changes within the formation period, use the latest one to align with the 
             trading period
             '''
-            chosen_shares.append([permno, data.iloc[dates[start_year+2][1]]['SICCD'], dates[start_year][0], dates[start_year+2][1]])
+            chosen_shares.append([permno, data.iloc[dates[str(start_year+2)][1]]['SICCD'], dates[str(start_year)][0], dates[str(start_year+2)][1]])
 
     '''
     start_date = pd.datetime.date(start_year, 1, 1)
@@ -148,14 +179,17 @@ def find_shares(start_year):
                     curr_date = start_date
                     is_start = True
     '''
-
-    print(chosen_shares)
+    with open('chosen_shares.json', 'w') as fp:
+        json.dump(chosen_shares, fp)
+    #print(chosen_shares)
     return chosen_shares
 
 
 if __name__ == '__main__':
     consolidate_shares(data)
-    #relevant_shares = find_shares(2000)
+    relevant_shares = find_shares(2000)
+    #baseline_pairs = baseline.main(data, relevant_shares)
+    #returns, num_pairs_traded = trade.trade(baseline_pairs, 2003, data)
     #relevant_shares = find_shares(2001)
 
     baseline_returns = []
