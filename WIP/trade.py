@@ -1,14 +1,14 @@
 import datetime
+import math
+import json
 import pandas as pd
 import re
 
-returns = []
-num_pairs_traded = 0
-
 
 def trade(chosen_pairs, trade_year, data):
-    global returns
-    global num_pairs_traded
+    print("Trading")
+    returns = []
+    num_pairs_traded = 0
 
     # Trade cointegrated pairs during trading period
     # Threshold to open positions: 2 SD away from mean
@@ -17,17 +17,20 @@ def trade(chosen_pairs, trade_year, data):
     # available price or the delisting returns
 
     start_date = datetime.datetime(trade_year, 1, 1)
-    if start_date.weekday() == 6:
-        start_date = start_date + datetime.timedelta(days=1)
-    elif start_date.weekday() == 5:
+
+    if start_date.weekday() == 6 or start_date.weekday() == 5:  # Monday = 0, Sunday = 6
         start_date = start_date + datetime.timedelta(days=2)
+    elif start_date.weekday() == 4:
+        start_date = start_date + datetime.timedelta(days=3)
+    else:
+        start_date = start_date + datetime.timedelta(days=1)
 
     start_date = pd.to_datetime(start_date)
 
     end_date = datetime.datetime(trade_year, 12, 31)
     if end_date.weekday() == 6:  # Monday = 0, Sunday = 6
         end_date = end_date - datetime.timedelta(days=2)
-    elif end_date.dt.dayofweek == 5:
+    elif end_date.weekday() == 5:
         end_date = end_date - datetime.timedelta(days=1)
 
     end_date = pd.to_datetime(end_date)
@@ -47,41 +50,43 @@ def trade(chosen_pairs, trade_year, data):
         current_two = data.iloc[start_two]['PERMNO']
 
         while start_date <= date_one <= end_date and start_date <= date_two <= end_date:
-            if date_one == date_two and current_one == code_one and current_two == code_two:
+            if date_one == date_two and str(current_one) == str(code_one) and str(current_two) == str(code_two):
                 if not 100 <= data.iloc[start_one]['DLSTCD'] < 200 or not 100 <= data.iloc[start_two]['DLSTCD'] < 200:
                     # Stock delisted during trading period
                     is_delisted = True
                     break
 
-                norm_price_one = data.iloc[start_one]['LOG_PRC']
-                norm_price_two = data.iloc[start_two]['LOG_PRC']
+                price_one = data.iloc[start_one]['PRC']
+                price_two = data.iloc[start_two]['PRC']
 
-                if not bool(re.search('[1-9]+', str(norm_price_one))) or not bool(re.search('[1-9]+', str(norm_price_two))):
+                if not bool(re.search('[1-9]+', str(price_one))) or not bool(re.search('[1-9]+', str(price_two))):
                     # Either one stock has missing prices during trading period --> Close on last available prices
                     break
 
-                spread = norm_price_one - norm_price_two
+                norm_price_one = math.log(price_one)
+                norm_price_two = math.log(price_two)
+
+                spread = norm_price_one - beta * norm_price_two
 
                 if is_open and abs(spread - mean) < 0.5*std:
-                    # close position and calculate returns
-                    # returns: (receive - pay) / initial amount received or paid
-                    price_one = data.iloc[start_one]['PRC']
-                    price_two = data.iloc[start_two]['PRC']
-
+                    # close position and calculate returns (Faff et al, 2016)
                     short, long = position[0], position[1]
 
                     if short[0] == 1:
-                        return_one = ((1 / beta) - (price_one * short[1])) / (1 / beta)
-                        return_two = ((price_two * long[1]) - 1)
+                        diff_one = (1 / beta) - (price_one * short[1])
+                        diff_two = (price_two * long[1]) - 1
                     elif short[0] == 2:
-                        return_two = ((1 / beta) - (price_two * short[1])) / (1 / beta)
-                        return_one = ((price_one * long[1]) - 1)
+                        diff_two = beta - (price_two * short[1])
+                        diff_one = (price_one * long[1]) - 1
 
-                    returns.append(return_one + return_two)
+                    returns.append(diff_one + diff_two)
+                    position.clear()
                     is_open = False
 
-                elif not is_open and abs(spread - mean) > 2*std:
+                elif not is_open and abs(spread - mean) >= 2*std:
+                    print("Opening position")
                     '''
+                    (Faff et al, 2016)
                     If deviation is positive --> $1 long position for Stock 2 and $1/Beta short position for Stock 1
                     If deviation is negative --> $1 long position for Stock 1 and $Beta short position for Stock 2
                     '''
@@ -98,15 +103,13 @@ def trade(chosen_pairs, trade_year, data):
 
                     num_trades = num_trades + 1
                     is_open = True
-            '''
             else:
                 # Come in here means missing values for at least one of the stocks
                 # 4 choices: Either fill in at the start with the prev day prices or ignore the trade all together or align dates or close with previous aligned date prices
                 # TODO: align the two dates if possile - this should be fine??
                 # TODO: or just ignore this trade?
-                # I think it will never enter here right??
+                # For now it is handling it the same way as the above with missing prices --> Break and calculate on last available aligned day
                 break
-            '''
 
             start_one += 1
             start_two += 1
@@ -128,23 +131,37 @@ def trade(chosen_pairs, trade_year, data):
             if bool(re.search('[1-9]+', str(data.iloc[start_one]['PRC']))):
                 price_one = data.iloc[start_one]['PRC']
                 if short[0] == 1:
-                    return_one = ((1 / beta) - (price_one * short[1])) / (1 / beta)
+                    diff_one = (1 / beta) - (price_one * short[1])
                 elif short[0] == 2:
-                    return_one = ((price_one * long[1]) - 1)
+                    diff_one = (price_one * long[1]) - 1
             else:
-                return_one = data.iloc[start_one]['DLRET']
+                if short[0] == 1:
+                    return_one = data.iloc[start_one]['DLRET']
+                    approx_price_one = return_one * short[2] + short[2]
+                    diff_one = (1 / beta) - approx_price_one * short[1]
+                elif short[0] == 2:
+                    return_one = data.iloc[start_one]['DLRET']
+                    approx_price_one = return_one * long[2] + long[2]
+                    diff_one = (approx_price_one * long[1]) - 1
 
             if bool(re.search('[1-9]+', str(data.iloc[start_two]['PRC']))):
                 price_two = data.iloc[start_two]['PRC']
 
                 if short[0] == 1:
-                    return_two = ((price_two * long[1]) - 1)
+                    diff_two = (price_two * long[1]) - 1
                 elif short[0] == 2:
-                    return_two = ((1 / beta) - (price_two * short[1])) / (1 / beta)
+                    diff_two = beta - (price_two * short[1])
             else:
-                return_two = data.iloc[start_two]['DLRET']
+                if short[0] == 1:
+                    return_two = data.iloc[start_two]['DLRET']
+                    approx_price_two = return_two * long[2] + long[2]
+                    diff_two = (approx_price_two * long[1]) - 1
+                elif short[0] == 2:
+                    return_two = data.iloc[start_two]['DLRET']
+                    approx_price_two = return_two * short[2] + short[2]
+                    diff_two = beta - (approx_price_two * short[1])
 
-            returns.append(return_one + return_two)
+            returns.append(diff_one + diff_two)
 
         elif is_open:
             # close position based on last trading day or last available price
@@ -157,20 +174,34 @@ def trade(chosen_pairs, trade_year, data):
             short, long = position[0], position[1]
 
             if short[0] == 1:
-                return_one = ((1 / beta) - (price_one * short[1])) / (1 / beta)
-                return_two = ((price_two * long[1]) - 1)
+                diff_one = (1 / beta) - (price_one * short[1])
+                diff_two = (price_two * long[1]) - 1
+
             elif short[0] == 2:
-                return_two = ((1 / beta) - (price_two * short[1])) / (1 / beta)
-                return_one = ((price_one * long[1]) - 1)
+                diff_two = beta - (price_two * short[1])
+                diff_one = (price_one * long[1]) - 1
 
-            returns.append(return_one + return_two)
-
+            returns.append(diff_one + diff_two)
         if num_trades != 0:
             num_pairs_traded = num_pairs_traded + 1
 
-    return sum(returns), num_pairs_traded
+    result = {}
+    file_name = '../Backup/returns' + str(trade_year) + '.json'
+    result['returns'] = (sum(returns), num_pairs_traded)
+    with open(file_name, 'w') as fp:
+        json.dump(result, fp)
+
+    print(sum(returns))
+    print(num_pairs_traded)
+    return sum(returns), num_pairs_traded # Sum of all payoffs
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    trade()
+    with open('/Users/elysiatan/PycharmProjects/thesis/WIP/selected_pairs.json') as json_file:
+        shares = json.load(json_file)
+
+    date_cols = ['date']
+    data = pd.read_csv("/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv", parse_dates=date_cols)
+
+    trade(shares, 2003, data)
