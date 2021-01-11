@@ -8,6 +8,7 @@ import statsmodels.api as sm
 
 
 def group_shares(relevant_shares):
+    # Adapted from: https: // github.com / alexchinco / CRSP - Data - Summary - Statistics - by - Industry - / blob / master / industries.json
     with open('/Users/elysiatan/PycharmProjects/thesis/fama_french.json') as json_file:
         data = json.load(json_file)
 
@@ -15,7 +16,11 @@ def group_shares(relevant_shares):
 
     for i in range(0, len(relevant_shares)):
         print(i)
-        sic_code = int(relevant_shares[i][1])
+        sic_code = relevant_shares[i][1]
+        if str(sic_code).isalpha():
+            sic_code = int(9999)
+        else:
+            sic_code = int(sic_code)
 
         if sic_code == 9999:
             name = 'unclassified'
@@ -93,7 +98,6 @@ def find_cointegrated_pairs(potential_pairs, data):
 
     relevant_cols = ['date', 'PRC', 'LOG_PRC']
 
-
     for key, pairs in potential_pairs.items():
         for i in range(0, len(pairs)):
             pair_one, pair_two = pairs[i]       # Share code, log_price series
@@ -157,21 +161,21 @@ def find_cointegrated_pairs(potential_pairs, data):
     with open('selected_pairs.json', 'w') as fp:
         json.dump(selected_pairs, fp)
 
-
     return selected_pairs
 
 
 def main(data, relevant_shares):
     # Formation period: 3 years + Trading period: 1 year (Rolling basis)
+    print("Forming pairs")
     grouped_shares = group_shares(relevant_shares)
-    possible_pairs = form_pairs(grouped_shares)         # group: (share code, start row, end row)
+    possible_pairs = form_pairs(grouped_shares, data)         # group: (share code, start row, end row)
     cointegrated_pairs = find_cointegrated_pairs(possible_pairs, data)   # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta)]
     #return ranked_pairs
     return cointegrated_pairs
 
 
 if __name__ == '__main__':
-    with open('/Users/elysiatan/PycharmProjects/thesis/WIP/chosen_shares.json') as json_file:
+    with open('/Backup/chosen_shares_copy.json') as json_file:
         shares = json.load(json_file)
 
     date_cols = ['date']
