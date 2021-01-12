@@ -82,7 +82,6 @@ def clean_data():
     fill_in_missing_delisting_returns(number_delisting_500, total_delisting_500, missing_delisting_500, df)
 
     new_file_name = "/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv"
-    #df['LOG_PRC'] = df.apply(lambda row: math.log(row['PRC'], 10), axis = 1)
     new_row = {'date':'01/01/2020'}
     df = df.append(new_row, ignore_index=True)
     df.to_csv(new_file_name)
