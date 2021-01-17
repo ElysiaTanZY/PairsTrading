@@ -185,12 +185,6 @@ def trade(chosen_pairs, trade_year, data):
         if num_trades != 0:
             num_pairs_traded = num_pairs_traded + 1
 
-    result = {}
-    file_name = '../Backup/returns' + str(trade_year) + '.json'
-    result['returns'] = (sum(returns), num_pairs_traded)
-    with open(file_name, 'w') as fp:
-        json.dump(result, fp)
-
     print(sum(returns))
     print(num_pairs_traded)
     return sum(returns), num_pairs_traded # Sum of all payoffs
