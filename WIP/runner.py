@@ -1,7 +1,6 @@
-import datetime
 import json
 import pandas as pd
-import re
+import math
 from WIP import baseline, trade, analyse_returns
 
 # Data Files
@@ -68,7 +67,7 @@ def consolidate_shares(data):
 
 def find_shares(start_year):
     # Sieves out all stocks that have prices for all days within the formation period and the corresponding end siccode
-    chosen_shares = []
+    relevant_shares = []
 
     for permno, dates in shares.items():
         print(permno)
@@ -115,12 +114,12 @@ def find_shares(start_year):
             trading period
             '''
             print("Appending")
-            chosen_shares.append([permno, data.iloc[dates[str(start_year+2)][1]]['SICCD'], dates[str(start_year)][0], dates[str(start_year+2)][1]])
+            prices = data.iloc[dates[str(start_year)][0]:dates[str(start_year+2)][1] + 1]
+            prices.loc[:, 'LOG_PRC'] = prices.apply(lambda row: math.log(row.PRC), axis=1)
 
-    with open('../Backup/chosen_shares.json', 'w') as fp:
-        json.dump(chosen_shares, fp)
+            relevant_shares.append([permno, data.iloc[dates[str(start_year+2)][1]]['SICCD'], dates[str(start_year+2)][1], prices])
 
-    return chosen_shares
+    return relevant_shares
 
 
 if __name__ == '__main__':
@@ -139,5 +138,14 @@ if __name__ == '__main__':
         baseline_returns.append(returns)
         baseline_num_pairs_traded.append(num_pairs_traded)
         baseline_num_pairs_chosen.append(len(baseline_pairs))
+
+    result_baseline = {}
+    result_baseline['returns'] = baseline_returns
+    result_baseline['pairs_chosen'] = baseline_num_pairs_chosen
+    result_baseline['pairs_traded'] = baseline_num_pairs_traded
+
+    file_name = '../Backup/returns_baseline.json'
+    with open(file_name, 'w') as fp:
+        json.dump(result_baseline, fp)
 
     analyse_returns.analyse_returns(baseline_returns, baseline_num_pairs_traded, baseline_num_pairs_chosen)
