@@ -7,7 +7,6 @@ def calculate_volume():
     crsp_file = "/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv"
     crsp_fields = ['date', 'PERMNO', 'PRC', 'SHROUT', 'VOL']
     crsp = pd.read_csv(crsp_file, usecols=crsp_fields, parse_dates=date_cols)
-    crsp.dropna(subset=['PERMNO'], inplace=True)
     crsp['PERMNO'] = crsp['PERMNO'].astype(int)
 
     volume_data = {} # {permno: {year: volume}}
@@ -41,15 +40,6 @@ def calculate_volume():
 
             if not permno == prev_permno:
                 prev_permno = permno
-
-    subset = crsp.iloc[start:]
-    print(subset.head(5))
-    print(subset.tail(5))
-    mean = subset['VOL'].mean()
-
-    temp = volume_data[str(prev_permno)]
-    temp[str(prev_year)] = mean
-    volume_data[str(prev_permno)] = temp
 
     with open('volume.json', 'w') as fp:
         json.dump(volume_data, fp)

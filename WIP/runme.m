@@ -22,7 +22,7 @@ X0=zeros(n,15);
 options.maxiter=20;
 tic;X_train=matrix_completion_sparse_mex(D,d,Omega,X0,options);toc
 Train=[label_train,X_train(1:size(Train,1),:)];
-csvwrite(strcat(file_dir,'sparse_features_1.csv'),Train);
+csvwrite(strcat(file_dir,'sparse_features.csv'),Train);
 
 
 end
