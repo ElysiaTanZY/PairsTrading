@@ -1,6 +1,9 @@
 import datetime
+import json
 import pandas as pd
 import re
+
+shares = {}  # {PERMNO: {year: (start, end)}}
 
 
 def calculate_yearly():
@@ -22,13 +25,13 @@ def calculate_yearly():
     # Nullified if net income is negative
     # ROE = Net Income / Shareholder's Equity
     compustat['roe'] = compustat.apply(lambda row: row['ni'] / (row['at'] - row['lt']) if
-        bool(re.search('[1-9]+', str(row['at'] - row['lt']))) and row['ni'] > 0 and row['at'] - row['lt'] > 0 else 0.0, axis=1)
+        bool(re.search('[1-9]+', str(row['at'] - row['lt']))) and row['ni'] > 0 else 0.0, axis=1)
 
     print("done roe")
 
     # ROA = Net Income / Total Assets
     compustat['roa'] = compustat.apply(lambda row: row['ni'] / row['at'] if
-        bool(re.search('[1-9]+', str(row['at']))) and row['at'] > 0 and row['ni'] > 0 else 0.0, axis=1)
+        bool(re.search('[1-9]+', str(row['at']))) and row['ni'] > 0 else 0.0, axis=1)
 
     print("done roa")
 
@@ -36,7 +39,7 @@ def calculate_yearly():
     compustat['nopat'] = compustat.apply(lambda row: row['ebit'] - row['txt'], axis=1)
     compustat['invested_capital'] = compustat.apply(lambda row: row['dlc'] + row['dltt'] + row['seq'] - row['ch'], axis=1)
     compustat['roic'] = compustat.apply(lambda row: row['nopat'] / row['invested_capital'] if
-        bool(re.search('[1-9]+', str(row['invested_capital']))) and row['nopat'] > 0 and row['invested_capital'] > 0 else 0.0, axis=1)
+        bool(re.search('[1-9]+', str(row['invested_capital']))) and row['nopat'] > 0 else 0.0, axis=1)
 
     print('done roic')
 
@@ -123,10 +126,29 @@ def retrieve_from_crsp(compustat, crsp):
             end_date = end_date - datetime.timedelta(days=1)
 
         end_date = pd.to_datetime(end_date)
+        if permno not in shares.keys():
+            market_cap.append(0.0)
+            book_to_market.append(0.0)
+            continue
 
+        if year not in shares[permno].keys():
+            market_cap.append(0.0)
+            book_to_market.append(0.0)
+            continue
+
+        start, end = shares[permno][year]
+        result = crsp.iloc[[end]]
+
+        if bool(re.search('[1-9]+', str(result.iloc[0]['PRC']))) and \
+                bool(re.search('[1-9]+', str(result.iloc[0]['SHROUT']))):
+            market_cap.append(result.iloc[0]['PRC'] * result.iloc[0]['SHROUT'])
+            book_to_market.append((row['Book_Value_CE'] * ((result.iloc[0]['SHROUT']/ 1000) / row['csho'])) / (
+                        result.iloc[0]['PRC'] * (result.iloc[0]['SHROUT'] / 1000)))
+
+        '''
         result = crsp.loc[crsp['PERMNO'] == permno]
         result = result.loc[crsp['date'] == end_date]
-
+    
         if len(result.values) != 0 and bool(re.search('[1-9]+', str(result['PRC'].values[0]))) and \
                 bool(re.search('[1-9]+', str(result['SHROUT'].values[0]))):
             market_cap.append(result['PRC'].values[0] * result['SHROUT'].values[0])
@@ -134,12 +156,13 @@ def retrieve_from_crsp(compustat, crsp):
         else:
             market_cap.append(0.0)
             book_to_market.append(0.0)
+        '''
 
     return market_cap, book_to_market
 
 
 def check_yearly():
-    result_file = "/Users/elysiatan/PycharmProjects/thesis/Updated/Data_Firm.csv"
+    result_file = "/Users/elysiatan/PycharmProjects/thesis/Updated/Data_Firm_All_2.csv"
     result = pd.read_csv(result_file)
 
     result = result.drop(columns=['index'])
