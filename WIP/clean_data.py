@@ -1,9 +1,6 @@
-import math
 import pandas as pd
 import re
 
-# Cannot remove the rows with price == 0.0 because this will distort the data set --> Need to keep the dates in tack so
-# that we are able to correctly determine the PH in US when exchanges are not open and hence no price will be recorded
 
 def clean_data():
     # Step 1: For delisted stocks with missing delisting returns, fill in with a number
@@ -82,7 +79,8 @@ def clean_data():
     fill_in_missing_delisting_returns(number_delisting_500, total_delisting_500, missing_delisting_500, df)
 
     new_file_name = "/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv"
-    new_row = {'date':'01/01/2020'}
+    new_row = {'PERMNO': 0, 'date':'01/01/2020'}
+    df['PERMNO'] = df['PERMNO'].astype(int)
     df = df.append(new_row, ignore_index=True)
     df.to_csv(new_file_name)
 
@@ -97,7 +95,8 @@ def fill_in_missing_delisting_returns(num, total, missing_list, df):
 
     for i in range(0, len(missing_list)):
         if average == 0:
-            df.at[i, 'DLRET'] = -0.55
+            #TODO: Change difffernet values for NASDAQ and other exchanges but see result from clustering first..
+            df.at[i, 'DLRET'] = -0.30
         else:
             df.at[i, 'DLRET'] = average
 
