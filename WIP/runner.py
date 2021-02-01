@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import math
 import re
-from WIP import baseline, trade, analyse_returns, pre_process_data, dbscan
+from WIP import baseline, trade, analyse_returns, pre_process_data, dbscan, kmedoids
 
 # Data Files
 date_cols = ['date']
@@ -155,6 +155,14 @@ if __name__ == '__main__':
     baseline_num_pairs_chosen = []
     baseline_num_pairs_traded = []
 
+    dbscan_returns = []
+    dbscan_num_pairs_chosen = []
+    dbscan_num_pairs_traded = []
+
+    kmedoids_returns = []
+    kmedoids_num_pairs_chosen = []
+    kmedoids_num_pairs_traded = []
+    '''
     relevant_shares = find_shares(2000)
     clustering_features = pre_process_data.main(relevant_shares, firm_data, 2000)
     clustering_features['permno'] = clustering_features['permno'].astype(int)
@@ -162,16 +170,32 @@ if __name__ == '__main__':
     standardised_share_list, index_mapping = standardise_share_list(relevant_shares, clustering_features)
     print(len(standardised_share_list))
 
+    baseline_original_pairs = baseline.main(prices_data, relevant_shares)
+    returns_original_baseline, num_pairs_original_traded_baseline = trade.trade(baseline_original_pairs, 2000 + 3, prices_data)
+
     baseline_pairs = baseline.main(prices_data, standardised_share_list)
     returns_baseline, num_pairs_traded_baseline = trade.trade(baseline_pairs, 2000 + 3, prices_data)
 
     dbscan_pairs = dbscan.dbscan_main(clustering_features, index_mapping, standardised_share_list)
     returns_dbscan, num_pairs_traded_dbscan = trade.trade(dbscan_pairs, 2000 + 3, prices_data)
 
+    kmedoid_pairs = kmedoids.kmedoid_main(clustering_features, index_mapping, standardised_share_list)
+    returns_kmedoid, num_pairs_traded_kmedoid = trade.trade(kmedoid_pairs, 2000 + 3, prices_data)
+
+    print("Baseline (Original)")
+    print(returns_original_baseline)
+    print(num_pairs_original_traded_baseline)
+    print(len(baseline_original_pairs))
+
     print("Baseline")
     print(returns_baseline)
     print(num_pairs_traded_baseline)
     print(len(baseline_pairs))
+
+    print("KMedoids")
+    print(returns_kmedoid)
+    print(num_pairs_traded_kmedoid)
+    print(len(kmedoid_pairs))
 
     print("DBSCAN")
     print(returns_dbscan)
@@ -192,6 +216,17 @@ if __name__ == '__main__':
         baseline_num_pairs_chosen.append(len(baseline_pairs))
 
         # ML Models
+        dbscan_pairs = dbscan.dbscan_main(clustering_features, index_mapping, standardised_share_list)
+        returns_dbscan, num_pairs_traded_dbscan = trade.trade(dbscan_pairs, start_year + 3, prices_data)
+        dbscan_returns.append(returns_dbscan)
+        dbscan_num_pairs_traded.append(num_pairs_traded_dbscan)
+        dbscan_num_pairs_chosen.append(len(dbscan_pairs))
+
+        kmedoid_pairs = kmedoids.kmedoid_main(clustering_features, index_mapping, standardised_share_list)
+        returns_kmedoid, num_pairs_traded_kmedoid = trade.trade(kmedoid_pairs, start_year + 3, prices_data)
+        kmedoids_returns.append(returns_kmedoid)
+        kmedoids_num_pairs_traded.append(num_pairs_traded_kmedoid)
+        kmedoids_num_pairs_chosen.append(len(kmedoid_pairs))
         #clustering_features = pre_process_data.main(relevant_shares, firm_data, trading_calendar, start_year)
 
     result_baseline = {}
@@ -199,9 +234,33 @@ if __name__ == '__main__':
     result_baseline['pairs_chosen'] = baseline_num_pairs_chosen
     result_baseline['pairs_traded'] = baseline_num_pairs_traded
 
-    file_name = '../Backup/returns_baseline_All.json'
+    file_name = '../Backup/returns_baseline.json'
     with open(file_name, 'w') as fp:
         json.dump(result_baseline, fp)
 
+    result_dbscan = {}
+    result_dbscan['returns'] = dbscan_returns
+    result_dbscan['pairs_chosen'] = dbscan_num_pairs_chosen
+    result_dbscan['pairs_traded'] = dbscan_num_pairs_traded
+
+    file_name = '../Backup/returns_dbscan.json'
+    with open(file_name, 'w') as fp:
+        json.dump(result_dbscan, fp)
+
+    result_kmedoids = {}
+    result_kmedoids['returns'] = kmedoids_returns
+    result_kmedoids['pairs_chosen'] = kmedoids_num_pairs_chosen
+    result_kmedoids['pairs_traded'] = kmedoids_num_pairs_traded
+
+    file_name = '../Backup/returns_kmedoids.json'
+    with open(file_name, 'w') as fp:
+        json.dump(result_kmedoids, fp)
+
+    print("Baseline")
     analyse_returns.analyse_returns(baseline_returns, baseline_num_pairs_traded, baseline_num_pairs_chosen)
-    '''
+
+    print("DBSCAN")
+    analyse_returns.analyse_returns(dbscan_returns, dbscan_num_pairs_traded, dbscan_num_pairs_chosen)
+
+    print("KMEDOIDS")
+    analyse_returns.analyse_returns(kmedoids_returns, kmedoids_num_pairs_traded, kmedoids_num_pairs_chosen)
