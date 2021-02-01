@@ -5,13 +5,13 @@ import statsmodels.tsa.stattools as st
 import statsmodels.api as sm
 
 
-def main(grouped_shares, data):
-    possible_pairs = form_pairs(grouped_shares, data)  # group: (share code, end row, log prices)
+def main(grouped_shares):
+    possible_pairs = form_pairs(grouped_shares)  # group: (share code, end row, log prices)
     cointegrated_pairs = find_cointegrated_pairs(possible_pairs)  # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta)]
     return cointegrated_pairs
 
 
-def form_pairs(grouped_shares, data):
+def form_pairs(grouped_shares):
     # Generate all the relevant pairs
     stationary_shares = {} # group: [(permno, dataframe, end_index)]
     pairs = {}  # group: [(pair 1, pair 2)]
@@ -34,7 +34,6 @@ def form_pairs(grouped_shares, data):
     for group, share_list in stationary_shares.items():
         pairs[group] = []
 
-        # TODO: Rank the pairs based on sum of squared difference between log price series (Faff et al, 2016) - TBC
         for i in range(0, len(share_list)):
             for j in range(i + 1, len(share_list)):
                 temp = pairs[group]

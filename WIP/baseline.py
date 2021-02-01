@@ -53,7 +53,7 @@ def main(data, relevant_shares):
     # Formation period: 3 years + Trading period: 1 year (Rolling basis)
     print("Forming pairs")
     grouped_shares = group_shares(relevant_shares)
-    cointegrated_pairs = cointegration_test.main(grouped_shares, data)
+    cointegrated_pairs = cointegration_test.main(grouped_shares)
     #return ranked_pairs
     return cointegrated_pairs
 
