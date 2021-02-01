@@ -87,16 +87,29 @@ def generate_risk_free_rate():
     return statistics.mean(rates) / 100
 
 
-def calculate_returns():
+def calculate_returns(path):
     # Used to just calculate after trading is done
-    returns = []
-    for i in range(2003, 2020):
-        file = "/Users/elysiatan/PycharmProjects/thesis/Backup/returns" + str(i) + ".json"
+    results = {}
 
-        with open(file) as json_file:
-            data = json.load(json_file)
+    with open(path) as json_file:
+        results = json.load(json_file)
 
-        returns.append(data['returns'][0])
+    returns = results['returns']
+    num_pairs_chosen = results['pairs_chosen']
+    num_pairs_traded = results['pairs_traded']
+
+    return_on_committed_capital_list = []
+    fully_invested_return_list = []
+
+    for i in range(0, len(returns)):
+        return_on_committed_capital_list.append(returns[i] / num_pairs_chosen[i] if num_pairs_chosen[i] > 0 else 0)
+        fully_invested_return_list.append(returns[i] / num_pairs_traded[i] if num_pairs_traded[i] > 0 else 0)
+
+    return_on_committed_capital = statistics.mean(return_on_committed_capital_list)
+    fully_invested_return = statistics.mean(fully_invested_return_list)
+
+    print("Average Return on committed capital: " + str(return_on_committed_capital))
+    print("Average Fully invested return: " + str(fully_invested_return))
 
     # Maximum Drawdown
     peak = 0.0
@@ -118,13 +131,6 @@ def calculate_returns():
     mdd = gap / peak if peak > 0.0 else 0
 
     print("Maximum drawdown: " + str(mdd))
-
-    return_on_committed_capital_list = [0.10063515691281018, 0.023719235251805883, 0.0564113063762093,
-                                        0.04453504677489428, -0.006745954327171538, 0.18846443902052776,
-                                        0.25902047814307194, -0.10382896501927806, 0.015234074435967937,
-                                        0.04390116810335263, -0.08806825992007854, -0.005130892028095391,
-                                        0.040248052853171526, -0.09604286620591032, -0.012555795323100947,
-                                        0.005649142506169986, 0.0599211135611284]
 
     # Sharpe ratio
     average = statistics.mean(return_on_committed_capital_list)
@@ -157,4 +163,12 @@ def calculate_returns():
 
 
 if __name__ == '__main__':
-    calculate_returns()
+    print("Baseline")
+    calculate_returns('/Users/elysiatan/PycharmProjects/thesis/Backup/returns_baseline.json')
+
+    print("\nDBSCAN")
+    calculate_returns('/Users/elysiatan/PycharmProjects/thesis/Backup/returns_dbscan.json')
+
+    print("\nKMEDOIDS")
+    calculate_returns('/Users/elysiatan/PycharmProjects/thesis/Backup/returns_kmedoids.json')
+
