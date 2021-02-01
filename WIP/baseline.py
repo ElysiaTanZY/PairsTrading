@@ -30,7 +30,7 @@ def group_shares(relevant_shares):
                     end = int(index['end'])
 
                     if start <= sic_code <= end:
-                        update_groups(groups, sub_group, relevant_shares, i)
+                        update_groups(groups, group, relevant_shares, i)
                         is_grouped = True
                         break
 
