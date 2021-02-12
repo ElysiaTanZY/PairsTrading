@@ -7,13 +7,14 @@ import statsmodels.api as sm
 
 def main(grouped_shares):
     possible_pairs = form_pairs(grouped_shares)  # group: (share code, end row, log prices)
-    cointegrated_pairs = find_cointegrated_pairs(possible_pairs)  # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta)]
+    cointegrated_pairs = find_cointegrated_pairs(possible_pairs)  # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]
+
     return cointegrated_pairs
 
 
 def form_pairs(grouped_shares):
     # Generate all the relevant pairs
-    stationary_shares = {} # group: [(permno, dataframe, end_index)]
+    stationary_shares = {} # group: [(permno, dataframe, end_index, sic)]
     pairs = {}  # group: [(pair 1, pair 2)]
 
     for group, share_list in grouped_shares.items():
@@ -28,7 +29,7 @@ def form_pairs(grouped_shares):
 
             if adf_result[1] > 0.05:
                 temp = stationary_shares[group]
-                temp.append((share_list[i][0], share_list[i][2], share_list[i][1]))
+                temp.append((share_list[i][0], share_list[i][2], share_list[i][1], share_list[i][3]))
                 stationary_shares[group] = temp
 
     for group, share_list in stationary_shares.items():
@@ -53,7 +54,7 @@ def find_cointegrated_pairs(potential_pairs):
 
     for key, pairs in potential_pairs.items():
         for i in range(0, len(pairs)):
-            pair_one, pair_two = pairs[i]       # Share code, log_price series
+            pair_one, pair_two = pairs[i]       # Share code, log_price series, end index, sic
 
             print(pair_one[0])
             print(pair_two[0])
@@ -95,7 +96,8 @@ def find_cointegrated_pairs(potential_pairs):
                     spread = log_price_one - log_price_two.values
                     mean = spread.mean()
                     std = spread.std()
-                    pair = (pair_one[0], pair_one[2] + 1, pair_two[0], pair_two[2] + 1, mean, std, beta)
+                    speed_of_mean_reversion = approximate_speed(log_price_one, log_price_two)
+                    pair = (pair_one[0], pair_one[2] + 1, pair_two[0], pair_two[2] + 1, mean, std, beta, pair_one[3], pair_two[3], speed_of_mean_reversion)
                     selected_pairs.append(pair)
                 else:
                     log_one_constant = sm.add_constant(log_price_one)
@@ -108,10 +110,32 @@ def find_cointegrated_pairs(potential_pairs):
                         spread = log_price_two - log_price_one.values
                         mean = spread.mean()
                         std = spread.std()
-                        pair = (pair_two[0], pair_two[2] + 1, pair_one[0], pair_one[2] + 1, mean, std, beta)
+                        speed_of_mean_reversion = approximate_speed(log_price_two, log_price_one)
+                        pair = (pair_two[0], pair_two[2] + 1, pair_one[0], pair_one[2] + 1, mean, std, beta, pair_one[3], pair_two[3], speed_of_mean_reversion)
                         selected_pairs.append(pair)
 
     with open('selected_pairs.json', 'w') as fp:
         json.dump(selected_pairs, fp)
 
     return selected_pairs
+
+
+def approximate_speed(price_one, price_two):
+    diff_one = []
+    diff_two = []
+
+    for index, value in price_one.items():
+        if index != 0:
+            diff_one.append(price_one[index] - price_one[index-1])
+
+    for index, value in price_two.items():
+        if index != 0:
+            diff_two.append(price_two[index] - price_two[index-1])
+
+    model = sm.OLS(diff_one, diff_two)
+    results = model.fit()
+    intercept, beta = results.params
+
+    return beta
+
+

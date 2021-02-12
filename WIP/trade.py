@@ -7,8 +7,10 @@ import re
 
 def trade(chosen_pairs, trade_year, data):
     print("Trading")
-    returns = []
+    payoffs_total = []
     num_pairs_traded = 0
+
+    payoffs_per_pair = []
 
     # Trade cointegrated pairs during trading period
     # Threshold to open positions: 2 SD away from mean
@@ -36,7 +38,8 @@ def trade(chosen_pairs, trade_year, data):
     end_date = pd.to_datetime(end_date)
 
     for i in range(0, len(chosen_pairs)):
-        code_one, start_one, code_two, start_two, mean, std, beta = chosen_pairs[i]
+        payoffs = []
+        code_one, start_one, code_two, start_two, mean, std, beta, sic_one, sic_two, speed = chosen_pairs[i]
 
         is_open = False
         is_delisted = False
@@ -79,7 +82,8 @@ def trade(chosen_pairs, trade_year, data):
                         diff_two = beta - (price_two * short[1])
                         diff_one = (price_one * long[1]) - 1
 
-                    returns.append(diff_one + diff_two)
+                    payoffs_total.append(diff_one + diff_two)
+                    payoffs.append(diff_one + diff_two)
                     position.clear()
                     is_open = False
 
@@ -161,7 +165,8 @@ def trade(chosen_pairs, trade_year, data):
                     approx_price_two = return_two * short[2] + short[2]
                     diff_two = beta - (approx_price_two * short[1])
 
-            returns.append(diff_one + diff_two)
+            payoffs_total.append(diff_one + diff_two)
+            payoffs.append(diff_one + diff_two)
 
         elif is_open:
             # close position based on last trading day or last available price
@@ -181,13 +186,17 @@ def trade(chosen_pairs, trade_year, data):
                 diff_two = beta - (price_two * short[1])
                 diff_one = (price_one * long[1]) - 1
 
-            returns.append(diff_one + diff_two)
+            payoffs_total.append(diff_one + diff_two)
+            payoffs.append(diff_one + diff_two)
         if num_trades != 0:
             num_pairs_traded = num_pairs_traded + 1
 
-    print(sum(returns))
+        print(payoffs)
+        payoffs_per_pair.append(payoffs)
+
+    print(sum(payoffs_total))
     print(num_pairs_traded)
-    return sum(returns), num_pairs_traded # Sum of all payoffs
+    return sum(payoffs_total), num_pairs_traded, payoffs_per_pair # Sum of all payoffs
 
 
 # Press the green button in the gutter to run the script.

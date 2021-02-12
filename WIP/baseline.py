@@ -42,10 +42,10 @@ def group_shares(relevant_shares):
 
 def update_groups(groups, name, relevant_shares, index):
     if name not in groups.keys():
-        groups[name] = [(relevant_shares[index][0], relevant_shares[index][2], relevant_shares[index][3])]
+        groups[name] = [(relevant_shares[index][0], relevant_shares[index][2], relevant_shares[index][3], relevant_shares[index][1])]
     else:
         temp = groups[name]
-        temp.append((relevant_shares[index][0], relevant_shares[index][2], relevant_shares[index][3]))
+        temp.append((relevant_shares[index][0], relevant_shares[index][2], relevant_shares[index][3], relevant_shares[index][1]))
         groups[name] = temp
 
 

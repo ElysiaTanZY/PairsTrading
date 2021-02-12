@@ -41,10 +41,10 @@ def group_stocks(labels, index_mapping, share_list, dataset):
 
         if not label == -1:
             if label not in grouped_stocks.keys():
-                grouped_stocks[label] = [(share_list[index][0], share_list[index][2], share_list[index][3])]
+                grouped_stocks[label] = [(share_list[index][0], share_list[index][2], share_list[index][3], share_list[index][1])]
             else:
                 temp = grouped_stocks[label]
-                temp.append((share_list[index][0], share_list[index][2], share_list[index][3]))
+                temp.append((share_list[index][0], share_list[index][2], share_list[index][3], share_list[index][1]))
                 grouped_stocks[label] = temp
 
     return grouped_stocks
