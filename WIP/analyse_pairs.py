@@ -1,5 +1,6 @@
 import json
 import matplotlib.pyplot as plt
+import seaborn as sns
 from tabulate import tabulate
 from WIP import analyse_returns
 
@@ -29,6 +30,7 @@ def analyse_pairs(pair_lists, returns):
     identified_within_industry = []  # List of identified within industry pairs each year
 
     inter_industry_pairs_dict = {}  # Splits the inter-indsutry pairs into their respective group pair
+    pairs_dict = {}    # Store the groups of chosen pairs
 
     for j in range(0, len(pair_lists)):
         pair_list = pair_lists[j]
@@ -76,6 +78,14 @@ def analyse_pairs(pair_lists, returns):
                     break
 
             total_payoffs = sum(returns[j][i])
+
+            if (pair_one_group, pair_two_group) not in pairs_dict.keys():
+                pairs_dict[(pair_one_group, pair_two_group)] = (1, pair_list[i][9])
+            else:
+                prev_count, prev_average = pairs_dict[(pair_one_group, pair_two_group)]
+                new_count = prev_count + 1
+                new_average = (prev_average * prev_count + pair_list[i][9]) / new_count
+                pairs_dict[(pair_one_group, pair_two_group)] = (new_count, new_average)
 
             if pair_one_group != pair_two_group:
                 #inter_industry_payoffs_series_curr.extend(returns[j][i])
@@ -143,14 +153,14 @@ def analyse_pairs(pair_lists, returns):
     print("\nWithin-Industry Pairs Analysis:")
     analyse_returns.analyse_returns(payoffs_within_industry, traded_within_industry, identified_within_industry)
 
-    generate_heat_map(pair_list, returns, groups)
+    generate_heat_map(pairs_dict, groups)
 
 
-def generate_heat_map(pair_lists, groups):
+def generate_heat_map(pairs_dict, groups):
     groups_dict = {}   # Map the group to an index
     count = 0
 
-    for group, value in groups:
+    for group, value in groups.items():
         groups_dict[group] = count
         count += 1
 
@@ -162,9 +172,18 @@ def generate_heat_map(pair_lists, groups):
             group_result.append(0)
         consolidated_result.append(group_result)
 
-    for i in range(0, len(pair_lists)):
-        pair_list = pair_lists[i]
+    for pair, stats in pairs_dict.items():
+        industry_one, industry_two = pair[0], pair[1]
+        ave_beta = stats[1]
 
+        index_one = groups_dict[industry_one]
+        index_two = groups_dict[industry_two]
+
+        consolidated_result[index_one][index_two] = ave_beta
+        consolidated_result[index_two][index_one] = ave_beta
+
+    ax = sns.heatmap(consolidated_result, xticklabels=list(groups.keys()), yticklabels=list(groups.keys()))
+    plt.show()
 
 
 if __name__ == '__main__':

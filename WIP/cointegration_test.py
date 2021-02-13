@@ -96,7 +96,7 @@ def find_cointegrated_pairs(potential_pairs):
                     spread = log_price_one - log_price_two.values
                     mean = spread.mean()
                     std = spread.std()
-                    speed_of_mean_reversion = approximate_speed(log_price_one, log_price_two)
+                    speed_of_mean_reversion = approximate_speed(log_price_one.values, log_price_two.values)
                     pair = (pair_one[0], pair_one[2] + 1, pair_two[0], pair_two[2] + 1, mean, std, beta, pair_one[3], pair_two[3], speed_of_mean_reversion)
                     selected_pairs.append(pair)
                 else:
@@ -110,7 +110,7 @@ def find_cointegrated_pairs(potential_pairs):
                         spread = log_price_two - log_price_one.values
                         mean = spread.mean()
                         std = spread.std()
-                        speed_of_mean_reversion = approximate_speed(log_price_two, log_price_one)
+                        speed_of_mean_reversion = approximate_speed(log_price_two.values, log_price_one.values)
                         pair = (pair_two[0], pair_two[2] + 1, pair_one[0], pair_one[2] + 1, mean, std, beta, pair_one[3], pair_two[3], speed_of_mean_reversion)
                         selected_pairs.append(pair)
 
@@ -124,14 +124,13 @@ def approximate_speed(price_one, price_two):
     diff_one = []
     diff_two = []
 
-    for index, value in price_one.items():
-        if index != 0:
-            diff_one.append(price_one[index] - price_one[index-1])
+    for index in range(1, len(price_one)):
+        diff_one.append(price_one[index] - price_one[index-1])
 
-    for index, value in price_two.items():
-        if index != 0:
-            diff_two.append(price_two[index] - price_two[index-1])
+    for index in range(1, len(price_two)):
+        diff_two.append(price_two[index] - price_two[index-1])
 
+    diff_two = sm.add_constant(diff_two)
     model = sm.OLS(diff_one, diff_two)
     results = model.fit()
     intercept, beta = results.params
