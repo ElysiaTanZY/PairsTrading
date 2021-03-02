@@ -1,8 +1,7 @@
 import json
 import pandas as pd
 import math
-import re
-from WIP import baseline, trade, analyse_returns, pre_process_data, dbscan, kmedoids
+from WIP import baseline, trade, analyse_pairs, analyse_returns, pre_process_data, dbscan, kmedoids, som, fuzzyk
 
 # Data Files
 date_cols = ['date']
@@ -131,7 +130,6 @@ def standardise_share_list(relevant_shares, clustering_features):
     standardised_list = []
     index_mapping = {}
 
-
     for i in range(0, len(relevant_shares)):
         print(i)
         permno = relevant_shares[i][0]
@@ -158,26 +156,90 @@ if __name__ == '__main__':
     dbscan_returns = []
     dbscan_num_pairs_chosen = []
     dbscan_num_pairs_traded = []
+    dbscan_pairs_list = []
+    dbscan_returns_per_pair_list = []
+    dbscan_returns_per_day_list = []
 
     kmedoids_returns = []
     kmedoids_num_pairs_chosen = []
     kmedoids_num_pairs_traded = []
+    kmedoids_pairs_list = []
+    kmedoids_returns_per_pair_list = []
+    kmedoids_returns_per_day_list = []
+
+    fuzzyk_returns = []
+    fuzzyk_num_pairs_chosen = []
+    fuzzyk_num_pairs_traded = []
+    fuzzyk_pairs_list = []
+    fuzzyk_returns_per_pair_list = []
+    fuzzyk_returns_per_day_list = []
+
+    for start_year in range(2000, 2017):
+        relevant_shares = find_shares(start_year)
+        clustering_features = pre_process_data.main(relevant_shares, firm_data, start_year)
+        clustering_features['permno'] = clustering_features['permno'].astype(int)
+
+        standardised_share_list, index_mapping = standardise_share_list(relevant_shares, clustering_features)
+        print(len(standardised_share_list))
+
+        fuzzyk_pairs = fuzzyk.fuzzy_main(clustering_features, index_mapping, standardised_share_list)
+        returns_fuzzyk, num_pairs_traded_fuzzyk, returns_per_pair_fuzzyk, returns_per_day_fuzzyk = trade.trade(
+            fuzzyk_pairs, start_year + 3, prices_data)
+
+        fuzzyk_pairs_list.append(fuzzyk_pairs)
+        fuzzyk_num_pairs_chosen.append(len(fuzzyk_pairs))
+        fuzzyk_returns_per_pair_list.append(returns_per_pair_fuzzyk)
+        fuzzyk_returns_per_day_list.append(returns_per_day_fuzzyk)
+        fuzzyk_returns.append(returns_fuzzyk)
+        fuzzyk_num_pairs_traded.append(num_pairs_traded_fuzzyk)
+
+    analyse_pairs.main(fuzzyk_pairs_list, fuzzyk_returns_per_pair_list, fuzzyk_returns_per_day_list)
+
+
+
     '''
-    relevant_shares = find_shares(2000)
-    clustering_features = pre_process_data.main(relevant_shares, firm_data, 2000)
-    clustering_features['permno'] = clustering_features['permno'].astype(int)
+    for start_year in range(2000, 2017):
+        relevant_shares = find_shares(start_year)
+        clustering_features = pre_process_data.main(relevant_shares, firm_data, start_year)
+        clustering_features['permno'] = clustering_features['permno'].astype(int)
 
-    standardised_share_list, index_mapping = standardise_share_list(relevant_shares, clustering_features)
-    print(len(standardised_share_list))
+        standardised_share_list, index_mapping = standardise_share_list(relevant_shares, clustering_features)
+        print(len(standardised_share_list))
+       
+        #baseline_original_pairs = baseline.main(prices_data, relevant_shares)
+        #returns_original_baseline, num_pairs_original_traded_baseline = trade.trade(baseline_original_pairs, 2000 + 3, prices_data)
+    
+        #baseline_pairs = baseline.main(prices_data, standardised_share_list)
+        #returns_baseline, num_pairs_traded_baseline = trade.trade(baseline_pairs, 2000 + 3, prices_data)
+        
+        dbscan_pairs = dbscan.dbscan_main(clustering_features, index_mapping, standardised_share_list)
+        returns_dbscan, num_pairs_traded_dbscan, returns_per_pair_dbscan, returns_per_day_dbscan = trade.trade(dbscan_pairs, start_year + 3, prices_data)
+        print(returns_dbscan)
+        print(returns_per_pair_dbscan)
 
-    baseline_original_pairs = baseline.main(prices_data, relevant_shares)
-    returns_original_baseline, num_pairs_original_traded_baseline = trade.trade(baseline_original_pairs, 2000 + 3, prices_data)
+        dbscan_pairs_list.append(dbscan_pairs)
+        dbscan_num_pairs_chosen.append(len(dbscan_pairs))
+        dbscan_returns_per_pair_list.append(returns_per_pair_dbscan)
+        dbscan_returns_per_day_list.append(returns_per_day_dbscan)
+        dbscan_returns.append(returns_dbscan)
+        dbscan_num_pairs_traded.append(num_pairs_traded_dbscan)
 
-    baseline_pairs = baseline.main(prices_data, standardised_share_list)
-    returns_baseline, num_pairs_traded_baseline = trade.trade(baseline_pairs, 2000 + 3, prices_data)
+        kmedoids_pairs = kmedoids.kmedoid_main(clustering_features, index_mapping, standardised_share_list)
+        returns_kmedoids, num_pairs_traded_kmedoids, returns_per_pair_kmedoids, returns_per_day_kmedoids = trade.trade(
+            kmedoids_pairs, start_year + 3, prices_data)
 
-    dbscan_pairs = dbscan.dbscan_main(clustering_features, index_mapping, standardised_share_list)
-    returns_dbscan, num_pairs_traded_dbscan = trade.trade(dbscan_pairs, 2000 + 3, prices_data)
+        kmedoids_pairs_list.append(kmedoids_pairs)
+        kmedoids_num_pairs_chosen.append(len(kmedoids_pairs))
+        kmedoids_returns_per_pair_list.append(returns_per_pair_kmedoids)
+        kmedoids_returns_per_day_list.append(returns_per_day_kmedoids)
+        kmedoids_returns.append(returns_kmedoids)
+        kmedoids_num_pairs_traded.append(num_pairs_traded_kmedoids)
+
+
+    analyse_pairs.main(dbscan_pairs_list, dbscan_returns_per_pair_list, dbscan_returns_per_day_list)
+    analyse_pairs.main(kmedoids_pairs_list, kmedoids_returns_per_pair_list, kmedoids_returns_per_day_list)
+    #analyse_returns.analyse_returns(dbscan_returns, dbscan_num_pairs_traded, dbscan_num_pairs_chosen, dbscan_returns_per_day_list)
+
 
     kmedoid_pairs = kmedoids.kmedoid_main(clustering_features, index_mapping, standardised_share_list)
     returns_kmedoid, num_pairs_traded_kmedoid = trade.trade(kmedoid_pairs, 2000 + 3, prices_data)
@@ -201,7 +263,7 @@ if __name__ == '__main__':
     print(returns_dbscan)
     print(num_pairs_traded_dbscan)
     print(len(dbscan_pairs))
-    '''
+
     for start_year in range(2000, 2017):
         relevant_shares = find_shares(start_year)
         clustering_features = pre_process_data.main(relevant_shares, firm_data, start_year)
@@ -210,24 +272,27 @@ if __name__ == '__main__':
 
         # Baseline model
         baseline_pairs = baseline.main(prices_data, standardised_share_list)
-        returns, num_pairs_traded = trade.trade(baseline_pairs, start_year + 3, prices_data)
-        baseline_returns.append(returns)
+        baseline_returns_total, num_pairs_traded = trade.trade(baseline_pairs, start_year + 3, prices_data)
+        baseline_returns.append(baseline_returns_total)
         baseline_num_pairs_traded.append(num_pairs_traded)
         baseline_num_pairs_chosen.append(len(baseline_pairs))
 
         # ML Models
         dbscan_pairs = dbscan.dbscan_main(clustering_features, index_mapping, standardised_share_list)
-        returns_dbscan, num_pairs_traded_dbscan = trade.trade(dbscan_pairs, start_year + 3, prices_data)
-        dbscan_returns.append(returns_dbscan)
+        analyse_pairs.analyse_pairs(dbscan_pairs)
+
+        dbscan_returns_total, num_pairs_traded_dbscan = trade.trade(dbscan_pairs, start_year + 3, prices_data)
+        dbscan_returns.append(dbscan_returns_total)
         dbscan_num_pairs_traded.append(num_pairs_traded_dbscan)
         dbscan_num_pairs_chosen.append(len(dbscan_pairs))
 
         kmedoid_pairs = kmedoids.kmedoid_main(clustering_features, index_mapping, standardised_share_list)
-        returns_kmedoid, num_pairs_traded_kmedoid = trade.trade(kmedoid_pairs, start_year + 3, prices_data)
-        kmedoids_returns.append(returns_kmedoid)
+        analyse_pairs.analyse_pairs(kmedoid_pairs)
+
+        kmedoid_returns_total, num_pairs_traded_kmedoid = trade.trade(kmedoid_pairs, start_year + 3, prices_data)
+        kmedoids_returns.append(kmedoid_returns_total)
         kmedoids_num_pairs_traded.append(num_pairs_traded_kmedoid)
         kmedoids_num_pairs_chosen.append(len(kmedoid_pairs))
-        #clustering_features = pre_process_data.main(relevant_shares, firm_data, trading_calendar, start_year)
 
     result_baseline = {}
     result_baseline['returns'] = baseline_returns
@@ -264,3 +329,4 @@ if __name__ == '__main__':
 
     print("KMEDOIDS")
     analyse_returns.analyse_returns(kmedoids_returns, kmedoids_num_pairs_traded, kmedoids_num_pairs_chosen)
+    '''
