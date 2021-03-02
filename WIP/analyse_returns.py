@@ -6,7 +6,7 @@ import pandas as pd
 import re
 
 
-def analyse_returns(returns, num_pairs_traded, num_pairs_chosen, payoffs_mdd):
+def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
     # Excess returns
     return_on_committed_capital_list = []
     fully_invested_return_list = []
@@ -73,7 +73,7 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen, payoffs_mdd):
 
     mdd = statistics.mean(mdd_list_all_years)
     print("Maximum drawdown: " + str(mdd))
-    '''
+   
     mdd_list_all_years = []
     for year in range(0, len(payoffs_mdd)):
         cumulative_payoff_list = [payoffs_mdd[year][0]]
@@ -94,10 +94,10 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen, payoffs_mdd):
 
         mdd = gap / peak if peak > 0.0 else 0
         mdd_list_all_years.append(mdd)
-
+    
     mdd = statistics.mean(mdd_list_all_years)
     print("Maximum drawdown: " + str(mdd))
-
+    '''
     peak = 0.0
     gap = 0.0
 
