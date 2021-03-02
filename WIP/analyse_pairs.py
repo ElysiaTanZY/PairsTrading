@@ -5,11 +5,11 @@ from tabulate import tabulate
 from WIP import analyse_returns
 
 
-def main(pair_list, returns):
-    analyse_pairs(pair_list, returns)   # returns: [[[(payoffs, date)]]]
+def main(pair_list, returns, payoffs_per_day):
+    analyse_pairs(pair_list, returns, payoffs_per_day)   # returns: [[[(payoffs, start, end, start, end)]]]
 
 
-def analyse_pairs(pair_lists, returns):
+def analyse_pairs(pair_lists, returns, payoffs_per_day):
     # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]
     with open('/Users/elysiatan/PycharmProjects/thesis/fama_french.json') as json_file:
         groups = json.load(json_file)
@@ -31,19 +31,17 @@ def analyse_pairs(pair_lists, returns):
 
     inter_industry_pairs_dict = {}  # Splits the inter-indsutry pairs into their respective group pair
     pairs_dict = {}    # Store the groups of chosen pairs
+    payoffs_dict = {}   # Store the returns of chosen pairs separated by industry
 
-    for j in range(0, len(pair_lists)):
-        pair_list = pair_lists[j]
+    for year in range(0, len(pair_lists)):
+        pair_list = pair_lists[year]
 
-        if len(pair_list) != len(returns[j]):
+        if len(pair_list) != len(returns[year]):
             print("Something wrong")
             return
 
         inter_industry_payoffs_curr_year = 0
         within_industry_payoffs_curr_year = 0
-
-        inter_industry_payoffs_series_curr = []
-        within_industry_payoffs_series_curr = []
 
         inter_industry_traded_curr_year = 0
         within_industry_traded_curr_year = 0
@@ -51,9 +49,9 @@ def analyse_pairs(pair_lists, returns):
         inter_industry_identified_curr_year = 0
         within_industry_identified_curr_year = 0
 
-        for i in range(0, len(pair_list)):
-            sic_one = int(pair_list[i][7])
-            sic_two = int(pair_list[i][8])
+        for pair in range(0, len(pair_list)):
+            sic_one = int(pair_list[pair][7])
+            sic_two = int(pair_list[pair][8])
 
             is_identified_group_one = False
             is_identified_group_two = False
@@ -77,41 +75,70 @@ def analyse_pairs(pair_lists, returns):
                 if is_identified_group_one and is_identified_group_two:
                     break
 
-            total_payoffs = sum(returns[j][i])
+            total_payoffs = sum(x[0] for x in returns[year][pair])
 
-            if (pair_one_group, pair_two_group) not in pairs_dict.keys():
-                pairs_dict[(pair_one_group, pair_two_group)] = (1, pair_list[i][9])
-            else:
+            # TODO: Refactor code
+            if (pair_one_group, pair_two_group) in pairs_dict.keys():
                 prev_count, prev_average = pairs_dict[(pair_one_group, pair_two_group)]
                 new_count = prev_count + 1
-                new_average = (prev_average * prev_count + pair_list[i][9]) / new_count
+                new_average = (prev_average * prev_count + pair_list[pair][9]) / new_count
                 pairs_dict[(pair_one_group, pair_two_group)] = (new_count, new_average)
+            elif (pair_two_group, pair_one_group) in pairs_dict.keys():
+                prev_count, prev_average = pairs_dict[(pair_two_group, pair_one_group)]
+                new_count = prev_count + 1
+                new_average = (prev_average * prev_count + pair_list[pair][9]) / new_count
+                pairs_dict[(pair_two_group, pair_one_group)] = (new_count, new_average)
+            else:
+                pairs_dict[(pair_one_group, pair_two_group)] = (1, pair_list[pair][9])
 
+
+            if (pair_one_group, pair_two_group) in payoffs_dict.keys():
+                prev_count, prev_average = pairs_dict[(pair_one_group, pair_two_group)]
+                new_count = prev_count + 1
+                new_average = (prev_average * prev_count + total_payoffs) / new_count
+                payoffs_dict[(pair_one_group, pair_two_group)] = (new_count, new_average)
+            elif (pair_two_group, pair_one_group) in payoffs_dict.keys():
+                prev_count, prev_average = pairs_dict[(pair_two_group, pair_one_group)]
+                new_count = prev_count + 1
+                new_average = (prev_average * prev_count + total_payoffs) / new_count
+                payoffs_dict[(pair_two_group, pair_one_group)] = (new_count, new_average)
+            else:
+                payoffs_dict[(pair_one_group, pair_two_group)] = (1, total_payoffs)
+
+            # Inter-industry
             if pair_one_group != pair_two_group:
                 #inter_industry_payoffs_series_curr.extend(returns[j][i])
-                inter_industry_pairs.append(pair_list[i])
+                inter_industry_pairs.append(pair_list[pair])
                 inter_industry_identified_curr_year += 1
 
                 if total_payoffs != 0:
                     inter_industry_payoffs_curr_year += total_payoffs
                     inter_industry_traded_curr_year += 1
+                    print(returns[year][pair])
 
-                if (pair_one_group, pair_two_group) not in inter_industry_pairs_dict.keys():
-                    inter_industry_pairs_dict[(pair_one_group, pair_two_group)] = (1, total_payoffs)
-                else:
+                if (pair_one_group, pair_two_group) in inter_industry_pairs_dict.keys():
                     prev_count, prev_average = inter_industry_pairs_dict[(pair_one_group, pair_two_group)]
                     new_count = prev_count + 1
                     new_average = (prev_average * prev_count + total_payoffs) / new_count
                     inter_industry_pairs_dict[(pair_one_group, pair_two_group)] = (new_count, new_average)
+                elif (pair_two_group, pair_one_group) in inter_industry_pairs_dict.keys():
+                    prev_count, prev_average = inter_industry_pairs_dict[(pair_two_group, pair_one_group)]
+                    new_count = prev_count + 1
+                    new_average = (prev_average * prev_count + total_payoffs) / new_count
+                    inter_industry_pairs_dict[(pair_two_group, pair_one_group)] = (new_count, new_average)
+                else:
+                    inter_industry_pairs_dict[(pair_one_group, pair_two_group)] = (1, total_payoffs)
 
+            # Within industry
             else:
                 #within_industry_payoffs_series_curr.extend(returns[j][i])
-                within_industry_pairs.append(pair_list[i])
+                within_industry_pairs.append(pair_list[pair])
                 within_industry_identified_curr_year += 1
 
                 if total_payoffs != 0:
                     within_industry_payoffs_curr_year += total_payoffs
                     within_industry_traded_curr_year += 1
+                    returns.append(returns[year][pair])
 
         payoffs_inter_industry.append(inter_industry_payoffs_curr_year)
         payoffs_within_industry.append(within_industry_payoffs_curr_year)
@@ -147,16 +174,58 @@ def analyse_pairs(pair_lists, returns):
     sorted_list = sorted(returns_list, key=lambda x:x[2], reverse=True)
     print(tabulate(sorted_list, headers=headers))
 
+    payoffs_per_day_inter_industry = []  # List of payoffs generated by inter industry pairs each year for MDD calculation
+    payoffs_per_day_within_industry = []  # List of payoffs generated by within industry pairs each year for MDD calculation
+
+    for year in range(0, len(payoffs_per_day)):
+        payoffs_per_day_inter_industry_curr = [0] * len(payoffs_per_day[year])
+        payoffs_per_day_within_industry_curr = [0] * len(payoffs_per_day[year])
+
+        for day in range(0, len(payoffs_per_day[year])):
+            for payoff in range(0, len(payoffs_per_day[year][day])):
+                payoff_pair, sic_one, sic_two = payoffs_per_day[year][day][payoff]
+                is_identified_group_one = False
+                is_identified_group_two = False
+
+                for group, value in groups.items():
+                    for sub_group, index in value.items():
+                        start = int(index['start'])
+                        end = int(index['end'])
+
+                        if start <= int(sic_one) <= end:
+                            pair_one_group = group
+                            is_identified_group_one = True
+
+                        if start <= int(sic_two) <= end:
+                            pair_two_group = group
+                            is_identified_group_two = True
+
+                        if is_identified_group_one and is_identified_group_two:
+                            break
+
+                    if is_identified_group_one and is_identified_group_two:
+                        break
+
+                if pair_one_group == pair_two_group:
+                    payoffs_per_day_within_industry_curr[day] += int(payoff_pair)
+                else:
+                    payoffs_per_day_inter_industry_curr[day] += int(payoff_pair)
+
+        payoffs_per_day_inter_industry.append(payoffs_per_day_inter_industry_curr)
+        payoffs_per_day_within_industry.append(payoffs_per_day_within_industry_curr)
+
+
     print("\nInter-Industry Pairs Analysis:")
-    analyse_returns.analyse_returns(payoffs_inter_industry, traded_inter_industry, identified_inter_industry)
+    analyse_returns.analyse_returns(payoffs_inter_industry, traded_inter_industry, identified_inter_industry, payoffs_per_day_within_industry)
 
     print("\nWithin-Industry Pairs Analysis:")
-    analyse_returns.analyse_returns(payoffs_within_industry, traded_within_industry, identified_within_industry)
+    analyse_returns.analyse_returns(payoffs_within_industry, traded_within_industry, identified_within_industry, payoffs_per_day_inter_industry)
 
     generate_heat_map(pairs_dict, groups)
+    generate_heat_map(payoffs_dict, groups)
 
 
-def generate_heat_map(pairs_dict, groups):
+def generate_heat_map(results_dict, groups):
     groups_dict = {}   # Map the group to an index
     count = 0
 
@@ -172,7 +241,7 @@ def generate_heat_map(pairs_dict, groups):
             group_result.append(0)
         consolidated_result.append(group_result)
 
-    for pair, stats in pairs_dict.items():
+    for pair, stats in results_dict.items():
         industry_one, industry_two = pair[0], pair[1]
         ave_beta = stats[1]
 
@@ -182,6 +251,7 @@ def generate_heat_map(pairs_dict, groups):
         consolidated_result[index_one][index_two] = ave_beta
         consolidated_result[index_two][index_one] = ave_beta
 
+    plt.subplots(figsize=(20, 15))
     ax = sns.heatmap(consolidated_result, xticklabels=list(groups.keys()), yticklabels=list(groups.keys()))
     plt.show()
 
