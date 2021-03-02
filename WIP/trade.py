@@ -4,6 +4,10 @@ import json
 import pandas as pd
 import re
 
+trading_calendar = {2000: 252, 2001: 248, 2002: 252, 2003: 252, 2004: 252, 2005: 252, 2006: 251, 2007: 251, 2008: 253,
+                   2009: 252, 2010: 252, 2011: 252, 2012: 250, 2013: 252, 2014: 252, 2015: 252, 2016: 252, 2017: 251,
+                   2018: 251, 2019: 252}
+
 
 def trade(chosen_pairs, trade_year, data):
     print("Trading")
@@ -11,6 +15,8 @@ def trade(chosen_pairs, trade_year, data):
     num_pairs_traded = 0
 
     payoffs_per_pair = []
+    payoffs_per_day = [[] for i in range(trading_calendar[trade_year])]
+    index = 0
 
     # Trade cointegrated pairs during trading period
     # Threshold to open positions: 2 SD away from mean
@@ -45,6 +51,7 @@ def trade(chosen_pairs, trade_year, data):
         is_delisted = False
         position = [] # Element one is short, element two is long
         num_trades = 0
+        index = 0
 
         date_one = data.iloc[start_one]['date']
         current_one = data.iloc[start_one]['PERMNO']
@@ -71,6 +78,22 @@ def trade(chosen_pairs, trade_year, data):
 
                 spread = norm_price_one - beta * norm_price_two
 
+                if is_open:
+                    short, long = position[0], position[1]
+
+                    if short[0] == 1:
+                        diff_one = (1 / beta) - (price_one * short[1])
+                        diff_two = (price_two * long[1]) - 1
+                    elif short[0] == 2:
+                        diff_two = beta - (price_two * short[1])
+                        diff_one = (price_one * long[1]) - 1
+
+                    temp = payoffs_per_day[index]
+                    temp.append((diff_one + diff_two, sic_one, sic_two))
+                    payoffs_per_day[index] = temp
+
+                index += 1
+
                 if is_open and abs(spread - mean) < 0.5*std:
                     # close position and calculate returns (Faff et al, 2016)
                     short, long = position[0], position[1]
@@ -83,7 +106,12 @@ def trade(chosen_pairs, trade_year, data):
                         diff_one = (price_one * long[1]) - 1
 
                     payoffs_total.append(diff_one + diff_two)
-                    payoffs.append(diff_one + diff_two)
+
+                    if short[0] == 1:
+                        payoffs.append((diff_one + diff_two, short[3], start_one, long[3], start_two))
+                    elif short[0] == 2:
+                        payoffs.append((diff_one + diff_two, short[3], start_two, long[3], start_one))
+
                     position.clear()
                     is_open = False
 
@@ -99,11 +127,11 @@ def trade(chosen_pairs, trade_year, data):
                     price_two = data.iloc[start_two]['PRC']
 
                     if (spread - mean) > 0:
-                        position.append((1, (1 / beta) / price_one, price_one))
-                        position.append((2, 1 / price_two, price_two))
+                        position.append((1, (1 / beta) / price_one, price_one, start_one))
+                        position.append((2, 1 / price_two, price_two, start_two))
                     elif (spread - mean) <= 0:
-                        position.append((2, beta / price_two, price_two))
-                        position.append((1, 1 / price_one, price_one))
+                        position.append((2, beta / price_two, price_two, start_two))
+                        position.append((1, 1 / price_one, price_one, start_one))
 
                     num_trades = num_trades + 1
                     is_open = True
@@ -166,7 +194,12 @@ def trade(chosen_pairs, trade_year, data):
                     diff_two = beta - (approx_price_two * short[1])
 
             payoffs_total.append(diff_one + diff_two)
-            payoffs.append(diff_one + diff_two)
+
+            if short[0] == 1:
+                payoffs.append((diff_one + diff_two, short[3], start_one, long[3], start_two))
+            elif short[0] == 2:
+                payoffs.append((diff_one + diff_two, short[3], start_two, long[3], start_one))
+
 
         elif is_open:
             # close position based on last trading day or last available price
@@ -187,7 +220,11 @@ def trade(chosen_pairs, trade_year, data):
                 diff_one = (price_one * long[1]) - 1
 
             payoffs_total.append(diff_one + diff_two)
-            payoffs.append(diff_one + diff_two)
+
+            if short[0] == 1:
+                payoffs.append((diff_one + diff_two, short[3], start_one, long[3], start_two))
+            elif short[0] == 2:
+                payoffs.append((diff_one + diff_two, short[3], start_two, long[3], start_one))
         if num_trades != 0:
             num_pairs_traded = num_pairs_traded + 1
 
@@ -196,7 +233,7 @@ def trade(chosen_pairs, trade_year, data):
 
     print(sum(payoffs_total))
     print(num_pairs_traded)
-    return sum(payoffs_total), num_pairs_traded, payoffs_per_pair # Sum of all payoffs
+    return sum(payoffs_total), num_pairs_traded, payoffs_per_pair, payoffs_per_day # Sum of all payoffs
 
 
 # Press the green button in the gutter to run the script.
