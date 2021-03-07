@@ -47,12 +47,12 @@ def form_pairs(grouped_shares):
 def find_cointegrated_pairs(potential_pairs):
     # Test pairs for cointegration and return cointegrated pairs
     # Normalise price series before testing for cointegration
-    # TODO: Heat map???
-    selected_pairs = []
+    selected_pairs = {}
 
     relevant_cols = ['date', 'PRC', 'LOG_PRC']
 
-    for key, pairs in potential_pairs.items():
+    for group, pairs in potential_pairs.items():
+        selected_pairs[group] = []
         for i in range(0, len(pairs)):
             pair_one, pair_two = pairs[i]       # Share code, log_price series, end index, sic
 
@@ -98,7 +98,7 @@ def find_cointegrated_pairs(potential_pairs):
                     std = spread.std()
                     speed_of_mean_reversion = approximate_speed(log_price_one.values, log_price_two.values)
                     pair = (pair_one[0], pair_one[2] + 1, pair_two[0], pair_two[2] + 1, mean, std, beta, pair_one[3], pair_two[3], speed_of_mean_reversion)
-                    selected_pairs.append(pair)
+                    update_pair_list(group, pair, selected_pairs)
                 else:
                     log_one_constant = sm.add_constant(log_price_one)
                     model = sm.OLS(np.asarray(log_price_two), np.asarray(log_one_constant))
@@ -112,12 +112,18 @@ def find_cointegrated_pairs(potential_pairs):
                         std = spread.std()
                         speed_of_mean_reversion = approximate_speed(log_price_two.values, log_price_one.values)
                         pair = (pair_two[0], pair_two[2] + 1, pair_one[0], pair_one[2] + 1, mean, std, beta, pair_one[3], pair_two[3], speed_of_mean_reversion)
-                        selected_pairs.append(pair)
+                        update_pair_list(group, pair, selected_pairs)
 
     with open('selected_pairs.json', 'w') as fp:
         json.dump(selected_pairs, fp)
 
     return selected_pairs
+
+
+def update_pair_list(group, pair, selected_pairs):
+    temp = selected_pairs[group]
+    temp.append(pair)
+    selected_pairs[group] = temp
 
 
 def approximate_speed(price_one, price_two):
