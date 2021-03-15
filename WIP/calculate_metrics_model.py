@@ -4,6 +4,8 @@ import json
 import statistics
 import pandas as pd
 import re
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
@@ -20,6 +22,9 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
 
     print("Average Return on committed capital: " + str(return_on_committed_capital))
     print("Average Fully invested return: " + str(fully_invested_return))
+
+    print("Average num pairs traded: " + str(statistics.mean(num_pairs_traded)))
+    print("Average num pairs chosen: " + str(statistics.mean(num_pairs_chosen)))
 
     print("Return on committed capital: ")
     print(return_on_committed_capital_list)
@@ -176,7 +181,7 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
     print("Sortino ratio: " + str(sortino_ratio))
     print("Downside deviation: " + str(downside_deviation))
 
-    return
+    return fully_invested_return_list
 
 
 def generate_risk_free_rate():

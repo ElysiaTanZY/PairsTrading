@@ -1,15 +1,17 @@
 import json
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
+import pandas as pd
 from tabulate import tabulate
 from WIP import calculate_metrics_model
 
 
-def main(pair_list, returns, payoffs_per_day):
-    analyse_pairs(pair_list, returns, payoffs_per_day)   # returns: [[[(payoffs, start, end, start, end)]]]
+def main(pair_list, returns, payoffs_per_day, model):
+    return analyse_pairs(pair_list, returns, payoffs_per_day, model)   # returns: [[[(payoffs, start, end, start, end)]]]
 
 
-def analyse_pairs(pair_lists, returns, payoffs_per_day):
+def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
     # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]
     with open('/Users/elysiatan/PycharmProjects/thesis/fama_french.json') as json_file:
         fama_groups = json.load(json_file)
@@ -51,8 +53,7 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day):
         for group in pair_list.keys():
             # Check number of pairs in pair_list and returns_list is the same
             if len(pair_list[group]) != len(returns_list[group]):
-                print("Something wrong")
-                return
+                raise Exception("Something wrong when storing pairs and returns in trading script")
 
             for pair in range(0, len(pair_list[group])):
                 sic_one = int(pair_list[group][pair][7])
@@ -125,9 +126,10 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day):
 
     labels = 'inter-industry', 'within-industry'
     sizes = [len(inter_industry_pairs), len(within_industry_pairs)]
-    plt.pie(sizes, labels=labels, autopct='%1.1f%%')
+    colors=["lightsteelblue", "steelblue"]
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', colors=colors)
     plt.axis('equal')
-    plt.title('Pairs composition')
+    plt.title('Pairs composition (' + model + ")")
     plt.show()
 
     print("\nInter Industry pairs composition")
@@ -151,7 +153,18 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day):
     calculate_metrics_model.analyse_returns(payoffs_within_industry, traded_within_industry, identified_within_industry)
 
     print("\nAll:")
-    calculate_metrics_model.analyse_returns(payoffs_combined, traded_combined, identified_combined)
+    fully_invested_return_list = calculate_metrics_model.analyse_returns(payoffs_combined, traded_combined, identified_combined)
+
+    return fully_invested_return_list, identified_combined, traded_combined
+
+    '''
+    generate_time_series(fully_invested_return_list, model)
+
+    try:
+        generate_bar_chart(identified_combined, traded_combined, model)
+    except Exception as exception:
+        print(exception)
+    '''
 
     #generate_heat_map(pairs_dict, groups, "Average Beta")
     #generate_heat_map(payoffs_dict, groups, "Average Payoffs")
