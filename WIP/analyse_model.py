@@ -1,10 +1,10 @@
 import json
 import matplotlib.pyplot as plt
-import numpy as np
 import seaborn as sns
-import pandas as pd
 from tabulate import tabulate
-from WIP import calculate_metrics_model
+from WIP import calculate_metrics_model, generate_charts, populate_result
+
+models = ["baseline", "dbscan", "fuzzy", "kmedoids"]
 
 
 def main(pair_list, returns, payoffs_per_day, model):
@@ -34,8 +34,8 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
     identified_combined = []
 
     inter_industry_pairs_dict = {}  # Splits the inter-indsutry pairs into their respective group pair
-    pairs_dict = {}  # Store the groups of chosen pairs
-    payoffs_dict = {}  # Store the returns of chosen pairs separated by industry
+    beta_pairs_dict = {}  # Store the beta of chosen pairs
+    payoffs_pairs_dict = {}  # Store the returns of chosen pairs separated by industry
 
     for year in range(0, len(pair_lists)):
         pair_list = pair_lists[year]
@@ -83,8 +83,8 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
 
                 total_payoffs = sum(x[0] for x in returns_list[group][pair])
 
-                update_results(pair_one_group, pair_two_group, pairs_dict, pair_list[group][pair][9])
-                update_results(pair_one_group, pair_two_group, payoffs_dict, total_payoffs)
+                update_results(pair_one_group, pair_two_group, beta_pairs_dict, pair_list[group][pair][9])
+                update_results(pair_one_group, pair_two_group, payoffs_pairs_dict, total_payoffs)
 
                 # Inter-industry
                 if pair_one_group != pair_two_group:
@@ -132,9 +132,9 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
     plt.title('Pairs composition (' + model + ")")
     plt.show()
 
-    print("\nInter Industry pairs composition")
+    print("\nPairs composition")
     headers = ["Industries", "Count", "Average Payoffs"]
-    returns_list = [(k,) + v for k, v in inter_industry_pairs_dict.items()]
+    returns_list = [(k,) + v for k, v in payoffs_pairs_dict.items()]
     sorted_list = sorted(returns_list, key=lambda x: x[2], reverse=True)
     print(tabulate(sorted_list, headers=headers))
 
@@ -156,18 +156,6 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
     fully_invested_return_list = calculate_metrics_model.analyse_returns(payoffs_combined, traded_combined, identified_combined)
 
     return fully_invested_return_list, identified_combined, traded_combined
-
-    '''
-    generate_time_series(fully_invested_return_list, model)
-
-    try:
-        generate_bar_chart(identified_combined, traded_combined, model)
-    except Exception as exception:
-        print(exception)
-    '''
-
-    #generate_heat_map(pairs_dict, groups, "Average Beta")
-    #generate_heat_map(payoffs_dict, groups, "Average Payoffs")
 
 
 def update_results(pair_one_group, pair_two_group, results_dict, new_value):
@@ -219,4 +207,15 @@ def generate_heat_map(results_dict, groups, title):
 
 
 if __name__ == '__main__':
-    pass
+    pairs_dict, payoffs_per_pair_dict, payoffs_per_day_dict = populate_result.main(models)
+
+    fully_invested_return_list = {}
+    identified_pairs_list = {}
+    traded_pairs_list = {}
+
+    for model in models:
+        print(model)
+        fully_invested_return_list[model], identified_pairs_list[model], traded_pairs_list[model] = main(pairs_dict[model], payoffs_per_pair_dict[model], payoffs_per_day_dict[model], model)
+        print("\n")
+
+    generate_charts.main(identified_pairs_list, traded_pairs_list, fully_invested_return_list, models)
