@@ -16,8 +16,6 @@ def trade(chosen_pairs, trade_year, data):
 
     payoffs_per_pair = {}
     payoffs_per_day = {}
-    #payoffs_per_day = [[] for i in range(trading_calendar[trade_year])]
-    index = 0
 
     # Trade cointegrated pairs during trading period
     # Threshold to open positions: 2 SD away from mean
@@ -143,11 +141,8 @@ def trade(chosen_pairs, trade_year, data):
                         num_trades = num_trades + 1
                         is_open = True
                 else:
-                    # Come in here means missing values for at least one of the stocks
-                    # 4 choices: Either fill in at the start with the prev day prices or ignore the trade all together or align dates or close with previous aligned date prices
-                    # TODO: align the two dates if possile - this should be fine??
-                    # TODO: or just ignore this trade?
-                    # For now it is handling it the same way as the above with missing prices --> Break and calculate on last available aligned day
+                    # Missing price for at least one of the stocks in the pair
+                    # Break and calculate on last available aligned day if there is an open position on the pair
                     break
 
                 start_one += 1
@@ -206,8 +201,6 @@ def trade(chosen_pairs, trade_year, data):
                     payoffs.append((diff_one + diff_two, short[3], start_one, long[3], start_two))
                 elif short[0] == 2:
                     payoffs.append((diff_one + diff_two, short[3], start_two, long[3], start_one))
-
-
             elif is_open:
                 # close position based on last trading day or last available price
                 start_one -= 1
