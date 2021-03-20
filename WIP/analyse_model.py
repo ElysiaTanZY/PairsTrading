@@ -4,7 +4,9 @@ import seaborn as sns
 from tabulate import tabulate
 from WIP import calculate_metrics_model, generate_charts, populate_result
 
-models = ["baseline", "dbscan", "fuzzy", "kmedoids"]
+ml_models = ["baseline", "dbscan", "fuzzy", "kmedoids"]
+feature_ablation_models = ['without_volume', 'without_price', 'without_firm_fundamentals']
+p_value_models = [0.01, 0.03, 0.075, 0.1]
 
 
 def main(pair_list, returns, payoffs_per_day, model):
@@ -88,7 +90,6 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
 
                 # Inter-industry
                 if pair_one_group != pair_two_group:
-                    #inter_industry_payoffs_series_curr.extend(returns[j][i])
                     inter_industry_pairs.append(pair_list[group][pair])
                     inter_industry_identified_curr_year += 1
 
@@ -100,7 +101,6 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
 
                 # Within industry
                 else:
-                    #within_industry_payoffs_series_curr.extend(returns[j][i])
                     within_industry_pairs.append(pair_list[group][pair])
                     within_industry_identified_curr_year += 1
 
@@ -120,10 +120,6 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
         identified_within_industry.append(within_industry_identified_curr_year)
         identified_combined.append(inter_industry_identified_curr_year + within_industry_identified_curr_year)
 
-        #payoffs_series_inter_industry.append(inter_industry_payoffs_series_curr)
-        #payoffs_series_within_industry.append(within_industry_payoffs_series_curr)
-
-
     labels = 'inter-industry', 'within-industry'
     sizes = [len(inter_industry_pairs), len(within_industry_pairs)]
     colors=["lightsteelblue", "steelblue"]
@@ -137,14 +133,6 @@ def analyse_pairs(pair_lists, returns, payoffs_per_day, model):
     returns_list = [(k,) + v for k, v in payoffs_pairs_dict.items()]
     sorted_list = sorted(returns_list, key=lambda x: x[2], reverse=True)
     print(tabulate(sorted_list, headers=headers))
-
-    '''
-    sizes = [sum(payoffs_inter_industry), sum(payoffs_within_industry)]
-    plt.pie(sizes, labels=labels, autopct='%1.1f%%')
-    plt.axis('equal')
-    plt.title('Pairs payoffs composition')
-    plt.show()
-    '''
 
     print("\nInter-Industry Pairs Analysis:")
     calculate_metrics_model.analyse_returns(payoffs_inter_industry, traded_inter_industry, identified_inter_industry)
@@ -207,15 +195,15 @@ def generate_heat_map(results_dict, groups, title):
 
 
 if __name__ == '__main__':
-    pairs_dict, payoffs_per_pair_dict, payoffs_per_day_dict = populate_result.main(models)
+    pairs_dict, payoffs_per_pair_dict, payoffs_per_day_dict = populate_result.main(ml_models)
 
     fully_invested_return_list = {}
     identified_pairs_list = {}
     traded_pairs_list = {}
 
-    for model in models:
+    for model in ml_models:
         print(model)
         fully_invested_return_list[model], identified_pairs_list[model], traded_pairs_list[model] = main(pairs_dict[model], payoffs_per_pair_dict[model], payoffs_per_day_dict[model], model)
         print("\n")
 
-    generate_charts.main(identified_pairs_list, traded_pairs_list, fully_invested_return_list, models)
+    generate_charts.main(identified_pairs_list, traded_pairs_list, fully_invested_return_list, ml_models)
