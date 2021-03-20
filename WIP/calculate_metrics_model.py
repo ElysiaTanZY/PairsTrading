@@ -30,79 +30,6 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
     print(return_on_committed_capital_list)
 
     # Maximum Drawdown
-    '''
-    mdd_list_all_years = []
-    
-    for year in range(0, len(returns_mdd)):
-        mdd_list_year = []
-        for pair in range(0, len(returns_mdd[year])):
-            for trade in returns_mdd[year][pair]:
-                payoff, start_short, end_short, start_long, end_long = trade
-
-                curr_short = start_short + 1
-                curr_long = start_long + 1
-
-                payoff_list = []
-
-                while curr_short <= end_short and curr_long <= end_long:
-                    short_payoff = data.iloc[start_short]['PRC'] - data.iloc[curr_short]['PRC']
-                    long_payoff = data.iloc[curr_long]['PRC'] - data.iloc[start_long]['PRC']
-
-                    payoff = short_payoff + long_payoff
-                    payoff_list.append(payoff)
-
-                    curr_short += 1
-                    curr_long += 1
-
-                peak = 0.0
-                gap = 0.0
-                print(payoff_list)
-                if len(payoff_list) != 0:
-                    cumulative_payoff_list = [payoff_list[0]]
-
-                    for i in range(1, len(payoff_list)):
-                        cumulative_payoff_list.append(cumulative_payoff_list[i - 1] + payoff_list[i])
-
-                    for i in range(0, len(cumulative_payoff_list)):
-                        for j in range(i + 1, len(cumulative_payoff_list)):
-                            temp_gap = cumulative_payoff_list[j] - cumulative_payoff_list[i]
-
-                            if (temp_gap < gap):
-                                gap = temp_gap
-                                peak = cumulative_payoff_list[i]
-
-                mdd = gap / peak if peak > 0.0 else 0
-                mdd_list_year.append(mdd)
-
-        mdd_list_all_years.append(statistics.mean(mdd_list_year))
-
-    mdd = statistics.mean(mdd_list_all_years)
-    print("Maximum drawdown: " + str(mdd))
-   
-    mdd_list_all_years = []
-    for year in range(0, len(payoffs_mdd)):
-        cumulative_payoff_list = [payoffs_mdd[year][0]]
-
-        for i in range(1, len(payoffs_mdd[year])):
-            cumulative_payoff_list.append(cumulative_payoff_list[i-1] + payoffs_mdd[year][i])
-
-        peak = 0.0
-        gap = 0.0
-
-        for i in range(0, len(cumulative_payoff_list)):
-            for j in range(i + 1, len(cumulative_payoff_list)):
-                temp_gap = cumulative_payoff_list[j] - cumulative_payoff_list[i]
-
-                if (temp_gap < gap):
-                    gap = temp_gap
-                    peak = cumulative_payoff_list[i]
-
-        mdd = gap / peak if peak > 0.0 else 0
-        mdd_list_all_years.append(mdd)
-    
-    mdd = statistics.mean(mdd_list_all_years)
-    print("Maximum drawdown: " + str(mdd))
-    '''
     peak = 0.0
     gap = 0.0
 
@@ -121,35 +48,6 @@ def analyse_returns(returns, num_pairs_traded, num_pairs_chosen):
 
     mdd = gap / peak if peak > 0.0 else 0
     print("12-mth Maximum drawdown: " + str(mdd))
-
-    '''   
-    maximum_drawdown_list = []
-
-    for returns_series in returns_series_all:
-        returns_series.sort(key=lambda returns_pair: datetime.strptime(returns_pair[1], '%m/%d/%Y'))
-
-        peak = 0.0
-        gap = 0.0
-    
-        cumulative_returns = [returns_series[0][0]]
-    
-        for i in range(1, len(returns_series)):
-            cumulative_returns.append(cumulative_returns[i-1] + returns_series[i][0])
-    
-        for i in range(0, len(cumulative_returns)):
-            for j in range(i + 1, len(cumulative_returns)):
-                temp_gap = cumulative_returns[j] - cumulative_returns[i]
-    
-                if (temp_gap < gap):
-                    gap = temp_gap
-                    peak = cumulative_returns[i]
-    
-        mdd = gap / peak if peak > 0.0 else 0
-        maximum_drawdown_list.append(mdd)
-    
-    max_drawdown = statistics.mean(maximum_drawdown_list)
-    print("Maximum drawdown: " + str(max_drawdown))
-    '''
 
     # Sharpe ratio
     average = statistics.mean(return_on_committed_capital_list)
@@ -274,12 +172,5 @@ def calculate_returns(path):
 
 
 if __name__ == '__main__':
-    print("Baseline")
-    calculate_returns('/Users/elysiatan/PycharmProjects/thesis/Backup/returns_baseline.json')
-
-    print("\nDBSCAN")
-    calculate_returns('/Users/elysiatan/PycharmProjects/thesis/Backup/returns_dbscan.json')
-
-    print("\nKMEDOIDS")
-    calculate_returns('/Users/elysiatan/PycharmProjects/thesis/Backup/returns_kmedoids.json')
+    pass
 
