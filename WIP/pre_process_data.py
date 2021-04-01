@@ -41,6 +41,7 @@ def extract_time_series_features(relevant_shares):
     :return: None
     '''
 
+    # Adapted from https: // github.com / cecilialeiqi / SPIRAL
     eng = matlab.engine.start_matlab()
     time_series_data = []
 
