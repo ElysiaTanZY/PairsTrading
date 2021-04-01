@@ -117,14 +117,14 @@ def compute_optimal_eps(feature_set, minPts):
     return kneedle.knee_y
 
 
-def cluster_dbscan(feature_set, minPts, eps, isSearching=True):
+def cluster_dbscan(feature_set, minPts, eps, is_searching=True):
 
     ''' Executes the DBSCAN algorithm
 
     :param feature_set: Data set to be clustered
     :param minPts: Number of points that need to be in the neighbourhood of a given point for it to be considered core
     :param eps: Neighbourhood size
-    :param isSearching: Indicator for whether the script is still searching for the optimal hyperparameters
+    :param is_searching: Indicator for whether the script is still searching for the optimal hyperparameters
     :return: Silhouette score if script is still searching, output labels otherwise
     '''
 
@@ -146,7 +146,7 @@ def cluster_dbscan(feature_set, minPts, eps, isSearching=True):
 
     print('Silhouette Score:' + str(silhouette_score))
 
-    if isSearching:
+    if is_searching:
         return silhouette_score
 
     print(len(set(labels)))
