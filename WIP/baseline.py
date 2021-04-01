@@ -1,10 +1,30 @@
 import json
-import pandas as pd
 import cointegration_test
 
 
+def main(relevant_shares):
+
+    ''' Identifies pairs to be traded under the Baseline model
+
+    :param relevant_shares: Shares to be considered in the formation period
+    :return: Cointegrated pairs separated into their individual groups
+    '''
+
+    print("Forming pairs")
+    grouped_shares = group_shares(relevant_shares)
+    cointegrated_pairs = cointegration_test.main(grouped_shares)
+    return cointegrated_pairs
+
+
 def group_shares(relevant_shares):
-    # Adapted from: https: // github.com / alexchinco / CRSP - Data - Summary - Statistics - by - Industry - / blob / master / industries.json
+
+    ''' Groups shares according to industry group based on the Fama French classification
+
+    :param relevant_shares: Shares to be considered in the formation period
+    :return: Grouped shares
+    '''
+
+    # Adapted from: https://github.com/alexchinco/CRSP-Data-Summary-Statistics-by-Industry-/blob/master/industries.json
     with open('/Users/elysiatan/PycharmProjects/thesis/fama_french.json') as json_file:
         data = json.load(json_file)
 
@@ -41,6 +61,16 @@ def group_shares(relevant_shares):
 
 
 def update_groups(groups, name, relevant_shares, index):
+
+    ''' Adds a share to its group
+
+    :param groups: Group share should be added to
+    :param name: PERMNO of share to be added
+    :param relevant_shares: Shares to be considered in the formation period
+    :param index: Index of share to be added in relevant_shares
+    :return:
+    '''
+
     if name not in groups.keys():
         groups[name] = [(relevant_shares[index][0], relevant_shares[index][2], relevant_shares[index][3], relevant_shares[index][1])]
     else:
@@ -49,22 +79,6 @@ def update_groups(groups, name, relevant_shares, index):
         groups[name] = temp
 
 
-def main(data, relevant_shares):
-    # Formation period: 3 years + Trading period: 1 year (Rolling basis)
-    print("Forming pairs")
-    grouped_shares = group_shares(relevant_shares)
-    cointegrated_pairs = cointegration_test.main(grouped_shares)
-    #return ranked_pairs
-    return cointegrated_pairs
-
-
 if __name__ == '__main__':
-    with open('/Backup/chosen_shares_copy.json') as json_file:
-        shares = json.load(json_file)
-
-    date_cols = ['date']
-    data = pd.read_csv("/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv", parse_dates=date_cols)
-
-    grouped_shares = group_shares(shares)
-    cointegrated_pairs = cointegration_test.main(grouped_shares, data)
+    pass
 

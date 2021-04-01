@@ -225,7 +225,7 @@ def normal_runner():
         standardised_share_list, index_mapping = standardise_share_list(relevant_shares, clustering_features)
 
         # Baseline
-        baseline_pairs = baseline.main(prices_data, standardised_share_list)
+        baseline_pairs = baseline.main(standardised_share_list)
         trader(baseline_pairs, start_year, prices_data, baseline_pairs_list, baseline_payoffs_per_pair_list, baseline_payoffs_per_day_list)
 
         # K-Medoids
