@@ -1,29 +1,41 @@
-import json
 import numpy as np
 import pandas as pd
-import statsmodels.tsa.stattools as st
 import statsmodels.api as sm
+import statsmodels.tsa.stattools as st
 
 
-def main(grouped_shares):
+def main(grouped_shares, p_value=0.05):
+
+    ''' Identifies cointegrated pairs
+
+    :param grouped_shares: List of shares to be considered separated by their individual groups
+    :param p_value: Cointegration threshold
+    :return: List of cointegrated pairs separated by their individual groups
+    '''
+
     possible_pairs = form_pairs(grouped_shares)  # group: (share code, end row, log prices)
-    cointegrated_pairs = find_cointegrated_pairs(possible_pairs)  # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]
+    cointegrated_pairs = find_cointegrated_pairs(possible_pairs, p_value)  # [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]
 
     return cointegrated_pairs
 
 
 def form_pairs(grouped_shares):
-    # Generate all the relevant pairs
+
+    ''' Generates all the possible pairs
+
+    :param grouped_shares: List of shares to be considered separated by their individual groups
+    :return: List of all possible pairs separated by their individual groups
+    '''
+
     stationary_shares = {} # group: [(permno, dataframe, end_index, sic)]
     pairs = {}  # group: [(pair 1, pair 2)]
 
     for group, share_list in grouped_shares.items():
         stationary_shares[group] = []
 
-        '''
-        Test for stationarity
-        ADF Test: Fail to reject null hypothesis --> Non-stationary (p-value > 0.05)
-        '''
+
+        # Test for stationarity
+        # ADF Test: Fail to reject null hypothesis --> Non-stationary (p-value > 0.05)
         for i in range(0, len(share_list)):
             adf_result = st.adfuller(share_list[i][2]['LOG_PRC'])
 
@@ -44,9 +56,15 @@ def form_pairs(grouped_shares):
     return pairs
 
 
-def find_cointegrated_pairs(potential_pairs):
-    # Test pairs for cointegration and return cointegrated pairs
-    # Normalise price series before testing for cointegration
+def find_cointegrated_pairs(potential_pairs, p_value):
+
+    ''' Tests pairs for cointegration
+
+    :param potential_pairs: List of all possible pairs separated by their individual groups
+    :param p_value: Cointegration threshold
+    :return: List of cointegrated pairs separated by their individual groups
+    '''
+
     selected_pairs = {}
 
     relevant_cols = ['date', 'PRC', 'LOG_PRC']
@@ -56,41 +74,27 @@ def find_cointegrated_pairs(potential_pairs):
         for i in range(0, len(pairs)):
             pair_one, pair_two = pairs[i]       # Share code, log_price series, end index, sic
 
-            print(pair_one[0])
-            print(pair_two[0])
-
             pair_one_prices = pair_one[1]
             pair_one_price_series = pd.DataFrame(pair_one_prices, columns=relevant_cols)
 
             pair_two_prices = pair_two[1]
             pair_two_price_series = pd.DataFrame(pair_two_prices, columns=relevant_cols)
 
-            '''
-            # Plot time series
-            ax = pair_one_price_series.plot(x='date', y='LOG_PRC')
-            pair_two_price_series.plot(ax=ax)
-            plt.show()
-            '''
-
             log_price_one = pair_one_price_series['LOG_PRC']
             log_price_two = pair_two_price_series['LOG_PRC']
 
-            '''
-            Test for co-integration
-            Engle and Granger: Reject null hypothesis --> Co-integrated (p-value < 0.05)
-            '''
-            print(log_price_one.shape)
-            print(log_price_two.shape)
+            # Test for co-integration
+            # Engle and Granger: Reject null hypothesis --> Co-integrated (p-value < 0.05)
             coint_t, pvalue, crit_value = st.coint(log_price_one, log_price_two)
 
-            if pvalue < 0.05:
-                print("Potential pair")
+            if pvalue < p_value:
                 log_two_constant = sm.add_constant(log_price_two)
                 model = sm.OLS(np.asarray(log_price_one), np.asarray(log_two_constant))
                 results = model.fit()
 
                 intercept, beta = results.params
 
+                # Beta refers to how much of Stock 2 to buy to match the value of Stock A --> Cannot be -ve
                 if beta > 0:
                     log_price_two = log_price_two.apply(lambda x:x*beta)
                     spread = log_price_one - log_price_two.values
@@ -114,19 +118,33 @@ def find_cointegrated_pairs(potential_pairs):
                         pair = (pair_two[0], pair_two[2] + 1, pair_one[0], pair_one[2] + 1, mean, std, beta, pair_one[3], pair_two[3], speed_of_mean_reversion)
                         update_pair_list(group, pair, selected_pairs)
 
-    with open('selected_pairs.json', 'w') as fp:
-        json.dump(selected_pairs, fp)
-
     return selected_pairs
 
 
 def update_pair_list(group, pair, selected_pairs):
+
+    ''' Adds the newly identified pair to its group in the dictionary of selected_pairs
+
+    :param group: Group of the pair
+    :param pair: Newly identified pair to be added
+    :param selected_pairs: Dictionary of selected pairs separated by groups
+    :return: None
+    '''
+
     temp = selected_pairs[group]
     temp.append(pair)
     selected_pairs[group] = temp
 
 
 def approximate_speed(price_one, price_two):
+
+    ''' Calculates the approximate speed of mean reversion of the pair
+
+    :param price_one: Price series of stock one
+    :param price_two: Price series of stock two
+    :return: Approximate speed of mean reversion of the pair
+    '''
+
     diff_one = []
     diff_two = []
 
@@ -139,8 +157,6 @@ def approximate_speed(price_one, price_two):
     diff_two = sm.add_constant(diff_two)
     model = sm.OLS(diff_one, diff_two)
     results = model.fit()
-    intercept, beta = results.params
+    intercept, gamma = results.params
 
-    return beta
-
-
+    return gamma
