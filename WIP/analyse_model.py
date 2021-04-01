@@ -44,8 +44,8 @@ def analyse_pairs(pair_lists, payoffs_per_pair_list, model):
     :return: List of fully invested returns per year, number of identied pairs per year, number of traded pairs per year
     '''
 
-    # payoffs_per_pair_list: [[[(payoffs, start, end, start, end)]]]
-    # pair_listss: [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]
+    # payoffs_per_pair_list: [{group:[(payoffs, start, end, start, end)]}]
+    # pair_listss: [{group: [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]}]
     with open('/Users/elysiatan/PycharmProjects/thesis/fama_french.json') as json_file:
         fama_groups = json.load(json_file)
 
