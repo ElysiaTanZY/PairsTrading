@@ -1,5 +1,6 @@
 import json
-import cointegration_test
+
+from WIP import cointegration_test
 
 
 def main(relevant_shares):
