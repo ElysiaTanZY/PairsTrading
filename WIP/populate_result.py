@@ -1,12 +1,15 @@
 import json
 
+
 def main(models):
-    file_name = "trading_results_"
+    file_name = "../Results/trading_results_"
     pairs_dict = {}
     payoffs_per_pair_dict = {}
     payoffs_per_day_dict = {}
+    num_outliers_dict = {}       # Only for DBSCAN models
 
     for model in models:
+        model = str(model)
         pairs_dict[model] = []
         payoffs_per_pair_dict[model] = []
         payoffs_per_day_dict[model] = []
@@ -19,4 +22,9 @@ def main(models):
         payoffs_per_pair_dict[model] = data["payoffs_per_pair_list"]
         payoffs_per_day_dict[model] = data["payoffs_per_day_list"]
 
-    return pairs_dict, payoffs_per_pair_dict, payoffs_per_day_dict
+        try:
+            num_outliers_dict[model] = data["num_outliers_list"]
+        except:
+            pass
+
+    return pairs_dict, payoffs_per_pair_dict, payoffs_per_day_dict, num_outliers_dict
