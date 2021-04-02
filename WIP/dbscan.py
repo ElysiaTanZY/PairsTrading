@@ -17,7 +17,7 @@ def dbscan_main(dataset, index_mapping, share_list, p_value=0.05):
     :param index_mapping: Mapping of PERMNO to row in dataset
     :param share_list: List of shares to be considered during the formation period
     :param p_value: Cointegration threshold
-    :return: Cointegrated pairs separated into their individual groups
+    :return: Cointegrated pairs separated into their individual groups and number of outliers identified
     '''
 
     feature_set = dataset.drop(columns=['permno'])
@@ -63,7 +63,7 @@ def group_stocks(labels, index_mapping, share_list, dataset):
     :param index_mapping: Mapping of PERMNO to row in dataset
     :param share_list: List of shares to be considered during the formation period
     :param dataset: Data set to be clustered
-    :return: Grouped shares
+    :return: Grouped shares and number of outliers identified
     '''
 
     grouped_stocks = {}
