@@ -182,7 +182,7 @@ def save_results(pairs_list, payoffs_per_pair_list, payoffs_per_day_list, model,
     results["payoffs_per_pair_list"] = payoffs_per_pair_list
     results["payoffs_per_day_list"] = payoffs_per_day_list
 
-    # num_outliers_dict will only be present when DBSCAN is used for clustering
+    # num_outliers_dict will only be present when DBSCAN or Baseline is used for clustering
     if num_outliers_list != None:
         results["num_outliers_list"] = num_outliers_list
 
@@ -202,6 +202,7 @@ def normal_runner():
     baseline_pairs_list = []
     baseline_payoffs_per_pair_list = []
     baseline_payoffs_per_day_list = []
+    num_unclassified_list = []
 
     dbscan_pairs_list = []
     dbscan_payoffs_per_pair_list = []
@@ -225,7 +226,8 @@ def normal_runner():
         standardised_share_list, index_mapping = standardise_share_list(relevant_shares, clustering_features)
 
         # Baseline
-        baseline_pairs = baseline.main(standardised_share_list)
+        baseline_pairs, num_unclassified = baseline.main(standardised_share_list)
+        num_unclassified_list.append(num_unclassified)
         trader(baseline_pairs, start_year, prices_data, baseline_pairs_list, baseline_payoffs_per_pair_list, baseline_payoffs_per_day_list)
 
         # K-Medoids
@@ -242,7 +244,7 @@ def normal_runner():
         trader(dbscan_pairs, start_year, prices_data, dbscan_pairs_list, dbscan_payoffs_per_pair_list, dbscan_payoffs_per_day_list)
 
     # Save results
-    save_results(baseline_pairs_list, baseline_payoffs_per_pair_list, baseline_payoffs_per_day_list, "baseline")
+    save_results(baseline_pairs_list, baseline_payoffs_per_pair_list, baseline_payoffs_per_day_list, "baseline", num_unclassified_list)
     save_results(kmedoids_pairs_list, kmedoids_payoffs_per_pair_list, kmedoids_payoffs_per_day_list, "kmedoids")
     save_results(dbscan_pairs_list, dbscan_payoffs_per_pair_list, dbscan_payoffs_per_day_list, "dbscan", num_outliers_list)
     save_results(fuzzyk_pairs_list, fuzzyk_payoffs_per_pair_list, fuzzyk_payoffs_per_day_list, "fuzzy")
@@ -399,7 +401,7 @@ def pca_sensitivity_runner():
 if __name__ == '__main__':
     # Tells the program which model should be run
     # 4 modes: normal, feature_ablation, hyperparam_tuning, pca
-    model_to_be_run = 'pca'
+    model_to_be_run = 'normal'
 
     if model_to_be_run == 'normal':
         normal_runner()
