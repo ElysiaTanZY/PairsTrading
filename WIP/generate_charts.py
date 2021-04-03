@@ -5,12 +5,12 @@ import datetime
 from matplotlib.dates import DateFormatter
 
 
-def main(identified, traded, fully_invested_returns, model_list):
+def main(identified, traded, return_on_committed_capital, model_list):
     for model in model_list:
         model = str(model)
         generate_bar_chart_pairs(identified[model], traded[model], model)
 
-    generate_time_series(fully_invested_returns, model_list)
+    generate_time_series(return_on_committed_capital, model_list)
 
 
 def generate_bar_chart_pairs(identified_time_series, traded_time_series, model):
@@ -57,24 +57,24 @@ def generate_bar_chart_pairs(identified_time_series, traded_time_series, model):
     plt.show()
 
 
-def generate_time_series(fully_invested_returns, model_list):
+def generate_time_series(return_on_committed_capital, model_list):
 
     ''' Plots the time series of fully invested returns for each model
 
-    :param fully_invested_returns: List of Fully Invested Returns List for each model
+    :param return_on_committed_capital: List of Return on Committed Capital List for each model
     :param model_list: Models whose Fully Invested Returns time series should be plotted
     :return: None
     '''
 
     years = []
-    for trade_year in range(2003, 2003 + len(fully_invested_returns[str(model_list[0])])):
+    for trade_year in range(2003, 2003 + len(return_on_committed_capital[str(model_list[0])])):
         years.append(pd.to_datetime(datetime.datetime(trade_year, 12, 31)))
 
     # Plot time series of Fully Invested Returns from each model experimented with, including baseline
     colours = ['springgreen', 'steelblue', 'orange', 'violet']
     for i in range(0, len(model_list)):
         model = str(model_list[i])
-        time_series = pd.Series(fully_invested_returns[model], index=years)
+        time_series = pd.Series(return_on_committed_capital[model], index=years)
         plt.plot(time_series, label=model, color=colours[i%len(model_list)])
 
     # Plot time series of NASDAQ returns to get a sense of how the pairs trading returns correlate with market movement
@@ -87,6 +87,6 @@ def generate_time_series(fully_invested_returns, model_list):
     date_form = DateFormatter("%y")
     plt.gca().xaxis.set_major_formatter(date_form)
     plt.xlabel("Year")
-    plt.ylabel("Fully Invested Returns")
+    plt.ylabel("Return on Committed Capital")
     plt.legend()
     plt.show()
