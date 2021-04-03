@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import statistics
 from tabulate import tabulate
 
-from WIP import calculate_metrics_model, generate_charts, populate_result
+from WIP import calculate_metrics, generate_charts, populate_result
 
 # Compare ML clustering with baseline cluster by industry groups (baseline_model: baseline)
 ml_models = ["baseline", "dbscan", "fuzzy", "kmedoids"]
@@ -18,7 +18,7 @@ p_value_models = [0.01, 0.03, 0.075, 0.1]
 pca_models = [0.97, 0.99]
 
 # Indicator of the models to be compared (To be changed accordingly)
-model_list = pca_models
+model_list = feature_ablation_models
 
 
 def main(pair_list, payoffs_per_pair_list, model):
@@ -28,7 +28,8 @@ def main(pair_list, payoffs_per_pair_list, model):
     :param pair_list: List of pairs identified by the model in each year
     :param payoffs_per_pair_list: List of payoffs made by each identified pair (separate list for each year)
     :param model: Model in concern
-    :return: List of fully invested returns per year, number of identied pairs per year, number of traded pairs per year
+    :return: List of return on committed capital per year, number of identied pairs per year,
+    number of traded pairs per year
     '''
 
     return analyse_pairs(pair_list, payoffs_per_pair_list, model)
@@ -41,11 +42,12 @@ def analyse_pairs(pair_lists, payoffs_per_pair_list, model):
     :param pair_lists: List of pairs identified by the model in each year
     :param payoffs_per_pair_list: List of payoffs made by each identified pair (separate list for each year)
     :param model: Model in concern
-    :return: List of fully invested returns per year, number of identied pairs per year, number of traded pairs per year
+    :return: List of return on committed capital per year, number of identied pairs per year,
+    number of traded pairs per year
     '''
 
     # payoffs_per_pair_list: [{group:[(payoffs, start, end, start, end)]}]
-    # pair_listss: [{group: [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]}]
+    # pair_lists: [{group: [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]}]
     with open('/Users/elysiatan/PycharmProjects/thesis/fama_french.json') as json_file:
         fama_groups = json.load(json_file)
 
@@ -182,20 +184,20 @@ def analyse_pairs(pair_lists, payoffs_per_pair_list, model):
 
     # Prints financial metrics of inter-industry pairs
     print("\nInter-Industry Pairs Analysis:")
-    calculate_metrics_model.analyse_returns(payoffs_inter_industry, traded_inter_industry, identified_inter_industry, num_trades_inter_industry)
+    calculate_metrics.analyse_returns(payoffs_inter_industry, traded_inter_industry, identified_inter_industry, num_trades_inter_industry)
 
     # Prints financial metrics of intra-industry pairs
     print("\nWithin-Industry Pairs Analysis:")
-    calculate_metrics_model.analyse_returns(payoffs_within_industry, traded_within_industry, identified_within_industry, num_trades_within_industry)
+    calculate_metrics.analyse_returns(payoffs_within_industry, traded_within_industry, identified_within_industry, num_trades_within_industry)
 
     # Prints financial metrics of all pairs
     print("\nAll:")
-    fully_invested_return_list = calculate_metrics_model.analyse_returns(payoffs_combined, traded_combined, identified_combined, num_trades_combined)
+    return_on_committed_capital_list = calculate_metrics.analyse_returns(payoffs_combined, traded_combined, identified_combined, num_trades_combined)
 
     print("\nAverage Beta:")
     print(statistics.mean(beta_list))
 
-    return fully_invested_return_list, identified_combined, traded_combined
+    return return_on_committed_capital_list, identified_combined, traded_combined
 
 
 def update_results(pair_one_group, pair_two_group, results_dict, new_value):
@@ -226,15 +228,15 @@ def update_results(pair_one_group, pair_two_group, results_dict, new_value):
 if __name__ == '__main__':
     pairs_dict, payoffs_per_pair_dict, payoffs_per_day_dict, num_outliers_dict = populate_result.main(model_list)
 
-    fully_invested_return_list = {}
+    return_on_committed_capital_list = {}
     identified_pairs_list = {}
     traded_pairs_list = {}
 
     for model in model_list:
         print(model)
         model = str(model)
-        fully_invested_return_list[model], identified_pairs_list[model], traded_pairs_list[model] = main(pairs_dict[model], payoffs_per_pair_dict[model], model)
-        print(num_outliers_dict.items())
+        return_on_committed_capital_list[model], identified_pairs_list[model], traded_pairs_list[model] = main(pairs_dict[model], payoffs_per_pair_dict[model], model)
         print("\n")
 
-    generate_charts.main(identified_pairs_list, traded_pairs_list, fully_invested_return_list, model_list)
+    print(num_outliers_dict.items())
+    generate_charts.main(identified_pairs_list, traded_pairs_list, return_on_committed_capital_list, model_list)
