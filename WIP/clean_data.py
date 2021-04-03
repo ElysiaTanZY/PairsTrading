@@ -107,11 +107,11 @@ def fill_in_missing_delisting_returns(num, total, missing_list, df):
             df.at[i, 'DLRET'] = average
 
 
-def check_data(exchange_code):
-    print("Checking for exchange: " + str(exchange_code))
+def check_data():
+    print("Checking for exchange: ")
 
-    df = pd.read_csv("./Backup/Exchange" + str(exchange_code) + ".csv");
-    df2 = pd.read_csv("./Updated/Exchange" + str(exchange_code) + "update.csv");
+    df = pd.read_csv("./Backup/Data_NASDAQ.csv")
+    df2 = pd.read_csv("./Updated/DATA_NASDAQ.csv")
 
     # Number of rows
     print(df.shape[0])
@@ -136,4 +136,4 @@ def check_data(exchange_code):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     clean_data()
-    check_data(i)
+    check_data()
