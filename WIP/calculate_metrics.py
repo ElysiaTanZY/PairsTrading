@@ -12,7 +12,7 @@ def analyse_returns(payoffs, num_pairs_traded, num_pairs_chosen, num_trades):
     :param num_pairs_traded: List of number of pairs traded each year
     :param num_pairs_chosen: List of number of pairs identified each year
     :param num_trades: List of number of trades made each year
-    :return: List of fully invested return per year
+    :return: List of return on committed capital per year
     '''
 
     # Excess returns
@@ -32,22 +32,30 @@ def analyse_returns(payoffs, num_pairs_traded, num_pairs_chosen, num_trades):
     # Maximum Drawdown
     peak = 0.0
     gap = 0.0
+    index_start = 0
+    index_end = 0
 
-    cumulative_returns = [payoffs[0]]
+    cumulative_payoffs = [payoffs[0]]
 
     for i in range(1, len(payoffs)):
-        cumulative_returns.append(cumulative_returns[i - 1] + payoffs[i])
+        cumulative_payoffs.append(cumulative_payoffs[i - 1] + payoffs[i])
 
-    for i in range(0, len(cumulative_returns)):
-        for j in range(i + 1, len(cumulative_returns)):
-            temp_gap = cumulative_returns[j] - cumulative_returns[i]
+    for i in range(0, len(cumulative_payoffs)):
+        for j in range(i + 1, len(cumulative_payoffs)):
+            temp_gap = cumulative_payoffs[j] - cumulative_payoffs[i]
 
             if (temp_gap < gap):
                 gap = temp_gap
-                peak = cumulative_returns[i]
+                peak = cumulative_payoffs[i]
+                index_start = i
+                index_end = j
 
     mdd = gap / peak if peak > 0.0 else 0
     print("12-mth Maximum drawdown: " + str(mdd))
+    print("Cumulative Returns:")
+    print(cumulative_payoffs)
+    print("Start: " + str(index_start + 2003))
+    print("End: " + str(index_end + 2003))
 
     # Sharpe ratio
     average = statistics.mean(return_on_committed_capital_list)
