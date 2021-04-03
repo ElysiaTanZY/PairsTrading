@@ -50,7 +50,8 @@ def clean_data():
     for i, row in df.iterrows():
         print(i)
         if row['PRC'] < 0:
-            df.at[i, 'PRC'] = row['PRC'] * -1 # PRC is negative to indicate that it is a bid/ask average when there is no closing price
+            # PRC is negative to indicate that it is a bid/ask average when there is no closing price
+            df.at[i, 'PRC'] = row['PRC'] * -1
 
         if 100 <= row['DLSTCD'] < 200:
             continue
@@ -101,7 +102,6 @@ def fill_in_missing_delisting_returns(num, total, missing_list, df):
 
     for i in range(0, len(missing_list)):
         if average == 0:
-            #TODO: Change difffernet values for NASDAQ and other exchanges but see result from clustering first..
             df.at[i, 'DLRET'] = -0.30
         else:
             df.at[i, 'DLRET'] = average
@@ -136,4 +136,4 @@ def check_data(exchange_code):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     clean_data()
-    #check_data(i)
+    check_data(i)
