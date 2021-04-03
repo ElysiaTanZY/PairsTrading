@@ -26,11 +26,12 @@ def analyse_pairs(pair_lists, returns, model):
     '''
 
     # payoffs_per_pair_list: [{group:[(payoffs, start, end, start, end)]}]
-    # pair_lists: [{group: [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, beta, sic_one, sic_two)]}]
+    # pair_lists: [{group: [(permno_one, trade_start_one_row, permno_two, trade_start_two_row, mean, std, gamma, sic_one, sic_two)]}]
     with open('/Users/elysiatan/PycharmProjects/thesis/fama_french.json') as json_file:
         groups = json.load(json_file)
 
     recurring_pairs_dict = {}                # Counts the number of times a particular pair is formed
+
     for year in range(0, len(pair_lists)):
         print(year)
         pair_list = pair_lists[year]
@@ -38,7 +39,7 @@ def analyse_pairs(pair_lists, returns, model):
 
         returns_list = []
         indiv_pairs_payoffs_dict = {}        # Payoffs of individual pairs formed in the year
-        indiv_pairs_beta_dict = {}           # (Beta, Payoffs) of individual pairs formed in the year
+        indiv_pairs_gamma_dict = {}           # (gamma, Payoffs) of individual pairs formed in the year
 
         for group in pair_list.keys():
             print(group)
@@ -46,8 +47,9 @@ def analyse_pairs(pair_lists, returns, model):
             within_industry_pairs = []       # List of within-industry pairs in the cluster
 
             inter_industry_pairs_dict = {}   # Splits the inter-indsutry pairs into their respective group pair
-            pairs_beta_dict = {}             # Store the beta of chosen pairs separated by (industry1, industry2)
-            pairs_payoffs_dict = {}          # Store the payoffs of chosen pairs separated by (industry1, industry2)
+            pairs_gamma_dict = {}             # Stores the gamma of chosen pairs separated by (industry1, industry2)
+            pairs_payoffs_dict = {}          # Stores the payoffs of chosen pairs separated by (industry1, industry2)
+            pairs_list_dict = {}             # Stores the list of pairs in each (industry1, industry2)
 
             if len(pair_list[group]) != len(payoffs_list[group]):
                 raise Exception("Something wrong when storing pairs and returns in trading script")
@@ -89,19 +91,21 @@ def analyse_pairs(pair_lists, returns, model):
 
                 total_payoffs = sum(x[0] for x in payoffs_list[group][pair])
 
-                # Update Beta Map
+                # Update gamma Map
                 if not is_identified_group_one:
                     pair_one_group = "Unclassified"
 
                 if not is_identified_group_two:
                     pair_two_group = "Unclassified"
 
-                update_results(pair_one_group, pair_two_group, pairs_beta_dict, pair_list[group][pair][9], True)
+                update_results(pair_one_group, pair_two_group, pairs_gamma_dict, pair_list[group][pair][9], True)
 
                 # Update Payoffs Map
                 update_results(pair_one_group, pair_two_group, pairs_payoffs_dict, total_payoffs)
                 update_results((pair_list[group][pair][0], pair_one_group), (pair_list[group][pair][2], pair_two_group), indiv_pairs_payoffs_dict, total_payoffs)
-                update_results((pair_list[group][pair][0], pair_one_group), (pair_list[group][pair][2], pair_two_group), indiv_pairs_beta_dict, (pair_list[group][pair][9], total_payoffs))
+                update_results((pair_list[group][pair][0], pair_one_group), (pair_list[group][pair][2], pair_two_group), indiv_pairs_gamma_dict, (pair_list[group][pair][9], total_payoffs))
+
+                update_pair_mapping(pair_one_group, pair_two_group, pairs_list_dict, (pair_list[group][pair][0], pair_list[group][pair][2], total_payoffs))
 
                 # Inter-industry
                 if pair_one_group != pair_two_group:
@@ -130,7 +134,22 @@ def analyse_pairs(pair_lists, returns, model):
             except:
                 print("Fully invested return: 0.00")
 
-            generate_heat_map(pairs_payoffs_dict, groups, "Average Payoffs for Group " + str(group) + " (" + str(year + 2003) + ")")
+            generate_heat_map(pairs_payoffs_dict, groups)
+
+            # Prints the payoffs of an (industry, industry) pair ranked in descending order
+            payoffs_ranking_list = [(k,) + v for k, v in pairs_payoffs_dict.items()]
+            sorted_list = sorted(payoffs_ranking_list, key=lambda x: x[2], reverse=True)
+
+            # Stores the pairs that contributed to the top (industry, industry) group
+            if len(sorted_list) != 0:
+                top_industry_combination = sorted_list[0][0]
+                headers = ["Share One", "Share Two", "Payoffs"]
+                sorted_pairs = sorted(pairs_list_dict[top_industry_combination], key=lambda x: x[2], reverse=True)
+
+                f = open(model + "pairs_in_top_industry.txt", "a")
+                f.write(tabulate(sorted_pairs, headers=headers))
+                f.write("\n")
+                f.close()
 
         if model == "baseline":
             average = statistics.mean(returns_list)
@@ -143,42 +162,36 @@ def analyse_pairs(pair_lists, returns, model):
             print("Median: " + str(statistics.median(returns_list)))
             print("\n")
 
-        # Prints the payoffs of an (industry, industry) pair ranked in descending order
-        headers = ["Industries", "Count", "Payoffs"]
-        returns_list = [(k,) + v for k, v in pairs_payoffs_dict.items()]
-        sorted_list = sorted(returns_list, key=lambda x: x[2], reverse=True)
-        print(tabulate(sorted_list, headers=headers))
+        if model == "baseline" or model == "dbscan":
+            # Stores the payoffs of the Top 10 pair ranked according to payoffs in descending order
+            headers = ["PERMNO and Industries", "Count", "Payoffs"]
+            payoffs_ranking_list = [(k,) + v for k, v in indiv_pairs_payoffs_dict.items()]
+            sorted_list = sorted(payoffs_ranking_list, key=lambda x: x[2], reverse=True)
 
-        # Stores the payoffs of the Top 10 pair ranked according to payoffs in descending order
-        headers = ["PERMNO and Industries", "Count", "Payoffs"]
-        returns_list = [(k,) + v for k, v in indiv_pairs_payoffs_dict.items()]
-        sorted_list = sorted(returns_list, key=lambda x: x[2], reverse=True)
+            f = open(model + "payoffs.txt", "a")
+            f.write(str(year) + "\n")
+            f.write(tabulate(sorted_list[:10], headers=headers))
 
-        f = open(model + "payoffs.txt", "a")
-        f.write(str(year) + "\n")
-        f.write(tabulate(sorted_list[:10], headers=headers))
+            payoffs = [x[2] for x in sorted_list[:10]]
+            f.write("\nAverage: " + str(statistics.mean(payoffs)) + "\n")
+            f.close()
 
-        payoffs = [x[2] for x in sorted_list[:10]]
-        print(payoffs)
-        f.write("\nAverage: " + str(statistics.mean(payoffs)) + "\n")
-        f.close()
+            # Stores the payoffs of the Top 10 pair ranked according to gamma in descending order
+            headers = ["PERMNO and Industries", "Count", "Gamma, Payoff"]
+            payoffs_ranking_gamma_list = [(k,) + v for k, v in indiv_pairs_gamma_dict.items()]
+            sorted_list = sorted(payoffs_ranking_gamma_list, key=lambda x: x[2][0], reverse=True)
 
-        # Stores the payoffs of the Top 10 pair ranked according to beta in descending order
-        headers = ["PERMNO and Industries", "Count", "Beta, Payoff"]
-        returns_list = [(k,) + v for k, v in indiv_pairs_beta_dict.items()]
-        sorted_list = sorted(returns_list, key=lambda x: x[2][0], reverse=True)
+            f = open(model + "gamma.txt", "a")
+            f.write(str(year) + "\n")
+            f.write(tabulate(sorted_list[:10], headers=headers))
 
-        f = open(model + "beta.txt", "a")
-        f.write(str(year) + "\n")
-        f.write(tabulate(sorted_list[:10], headers=headers))
+            gamma_list = [x[2][1] for x in sorted_list[:10]]
+            f.write("\nAverage: " + str(statistics.mean(gamma_list)) + "\n")
+            f.close()
 
-        beta_list = [x[2][1] for x in sorted_list[:10]]
-        f.write("\nAverage: " + str(statistics.mean(beta_list)) + "\n")
-        f.close()
-
-        for i in range(0, 11):
-            if i < len(sorted_list):
-                update_results(sorted_list[i][0][0][0], sorted_list[i][0][1][0], recurring_pairs_dict, 0)
+            for i in range(0, 11):
+                if i < len(sorted_list):
+                    update_results(sorted_list[i][0][0][0], sorted_list[i][0][1][0], recurring_pairs_dict, 0)
 
     # Stores the number of times a particular pair is identified in the 17 formation periods
     f = open(model + "recurring.txt", "a")
@@ -186,6 +199,28 @@ def analyse_pairs(pair_lists, returns, model):
     sorted_list = sorted(recurring_list, key=lambda x: x[1], reverse=True)
     f.write(tabulate(sorted_list, headers=headers))
     f.close()
+
+
+def update_pair_mapping(pair_one, pair_two, pairs_list_dict, pair_info):
+
+    ''' Updates the pairs_list_dict with the new pair
+
+    :param pair_one: First stock in the pair
+    :param pair_two: Second stock in the pair
+    :param pairs_list_dict: Dictionary that stores the exact pairs of a particular industry combination
+    :param pair_info: Permno of the pairs
+    :return: None
+    '''
+
+    if (pair_one, pair_two) in pairs_list_dict.keys():
+
+        pairs_list_dict[(pair_one, pair_two)].append(pair_info)
+
+    elif (pair_two, pair_one) in pairs_list_dict.keys():
+        pairs_list_dict[(pair_two, pair_one)].append(pair_info)
+
+    else:
+        pairs_list_dict[(pair_one, pair_two)]= [pair_info]
 
 
 def update_results(key_one, key_two, results_dict, add_val, calc_average=False):
@@ -224,7 +259,7 @@ def update_results(key_one, key_two, results_dict, add_val, calc_average=False):
         results_dict[(key_one, key_two)] = (1, add_val)
 
 
-def generate_heat_map(results_dict, groups, title):
+def generate_heat_map(pairs_payoffs_dict, groups):
     groups_dict = {}   # Map the group to an index
     count = 0
 
@@ -243,15 +278,15 @@ def generate_heat_map(results_dict, groups, title):
             group_result.append(0)
         consolidated_result.append(group_result)
 
-    for pair, stats in results_dict.items():
+    for pair, stats in pairs_payoffs_dict.items():
         industry_one, industry_two = pair[0], pair[1]
-        ave_beta = stats[1]
+        payoff = stats[1]
 
         index_one = groups_dict[industry_one]
         index_two = groups_dict[industry_two]
 
-        consolidated_result[index_one][index_two] = ave_beta
-        consolidated_result[index_two][index_one] = ave_beta
+        consolidated_result[index_one][index_two] = payoff
+        consolidated_result[index_two][index_one] = payoff
 
     plt.subplots(figsize=(50, 50))
     plt.tick_params(axis='both', labelsize=30)
@@ -259,7 +294,7 @@ def generate_heat_map(results_dict, groups, title):
     mask[np.triu_indices_from(mask)] = True
     mask[np.diag_indices_from(mask)] = False
 
-    ax = sns.heatmap(consolidated_result, mask=mask, xticklabels=list(groups_dict.keys()), yticklabels=list(groups.keys()))
+    ax = sns.heatmap(consolidated_result, mask=mask, xticklabels=list(groups_dict.keys()), yticklabels=list(groups_dict.keys()))
     cbar = ax.collections[0].colorbar
     cbar.ax.tick_params(labelsize=60)
     ax.figure.subplots_adjust(left=0.2, bottom=0.2)
