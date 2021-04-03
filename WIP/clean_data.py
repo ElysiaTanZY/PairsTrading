@@ -3,6 +3,12 @@ import re
 
 
 def clean_data():
+
+    ''' Cleans the data to ensure that missing values are filled in
+
+    :return: None
+    '''
+
     # Step 1: For delisted stocks with missing delisting returns, fill in with a number
     # Numbers are filled in by making use of the average available delisting return for that code,
     # if empty and NASDAQ firm - Use -55% else use -30%

@@ -3,6 +3,12 @@ import pandas as pd
 
 
 def calculate_volume():
+
+    ''' Calculates average trade volume for each stock for each year
+
+    :return: None
+    '''
+
     date_cols = ['date']
     crsp_file = "/Users/elysiatan/PycharmProjects/thesis/Updated/Data_NASDAQ.csv"
     crsp_fields = ['date', 'PERMNO', 'PRC', 'SHROUT', 'VOL']
@@ -27,12 +33,8 @@ def calculate_volume():
             subset = crsp.iloc[start:i]
             mean = subset['VOL'].mean()
 
-            print('Before')
             temp = volume_data[str(prev_permno)]
-            print(temp)
-            print('AFter')
             temp[str(prev_year)] = mean
-            print(temp)
             volume_data[str(prev_permno)] = temp
 
             start = i

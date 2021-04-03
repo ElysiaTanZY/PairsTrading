@@ -1,5 +1,4 @@
 import datetime
-import json
 import pandas as pd
 import re
 
@@ -7,6 +6,11 @@ shares = {}  # {PERMNO: {year: (start, end)}}
 
 
 def calculate_yearly():
+    ''' Calculate the necessary firm fundamentals
+
+    :return: None
+    '''
+
     date_cols = ['datadate']
     compustat_file = "/Users/elysiatan/PycharmProjects/thesis/Backup/Firm_Fundamentals_Annual.csv"
     compustat_fields = ['datadate', 'LPERMNO', 'at', 'csho', 'ni', 'lt', 'mkvalt', 'seq', 'prcc_f', 'ceq', 'dvpa', 'tstkp', 'ebit', 'txt', 'ch', 'dlc', 'dltt']
@@ -19,8 +23,6 @@ def calculate_yearly():
     crsp = pd.read_csv(crsp_file, usecols=crsp_fields, parse_dates=date_cols)
     crsp.dropna(subset=['PERMNO'], inplace=True)
     crsp['PERMNO'] = crsp['PERMNO'].astype(int)
-    print(compustat.dtypes)
-    print(crsp.dtypes)
 
     # Nullified if net income is negative
     # ROE = Net Income / Shareholder's Equity
@@ -79,7 +81,14 @@ def calculate_yearly():
 
 
 def retrieve_from_beta_suite(compustat):
-    # Retrieve market beta from beta suite dataset
+
+    ''' Retrieves market beta from beta suite dataset
+
+    :param compustat: Compustat dataset that holds firm fundamentals --> Provides the list of PERMNO for which beta
+    needs to be extracted
+    :return: List of beta for each stock
+    '''
+
     beta = []
 
     date_cols = ['DATE']
@@ -111,7 +120,14 @@ def retrieve_from_beta_suite(compustat):
 
 
 def retrieve_from_crsp(compustat, crsp):
-    # Retrieve market cap at calendar year end and calculate book/market ratio for given PERMNO for that year
+
+    ''' Retrieves market cap at calendar year end and calculate book/market ratio
+
+    :param compustat: Compustat dataset that holds firm fundamentals --> Provides the list of PERMNO for which beta
+    :param crsp: CRSP dataset that holds stock information --> Provides the trade volume required to calculate B/M ratio
+    :return:
+    '''
+
     market_cap = []
     book_to_market = []
 
@@ -144,19 +160,6 @@ def retrieve_from_crsp(compustat, crsp):
             market_cap.append(result.iloc[0]['PRC'] * result.iloc[0]['SHROUT'])
             book_to_market.append((row['Book_Value_CE'] * ((result.iloc[0]['SHROUT']/ 1000) / row['csho'])) / (
                         result.iloc[0]['PRC'] * (result.iloc[0]['SHROUT'] / 1000)))
-
-        '''
-        result = crsp.loc[crsp['PERMNO'] == permno]
-        result = result.loc[crsp['date'] == end_date]
-    
-        if len(result.values) != 0 and bool(re.search('[1-9]+', str(result['PRC'].values[0]))) and \
-                bool(re.search('[1-9]+', str(result['SHROUT'].values[0]))):
-            market_cap.append(result['PRC'].values[0] * result['SHROUT'].values[0])
-            book_to_market.append((row['Book_Value_CE'] * ((result['SHROUT'].values[0] / 1000) / row['csho'])) / (result['PRC'].values[0] * (result['SHROUT'].values[0] / 1000)))
-        else:
-            market_cap.append(0.0)
-            book_to_market.append(0.0)
-        '''
 
     return market_cap, book_to_market
 
@@ -195,5 +198,5 @@ def check_yearly():
 
 
 if __name__ == '__main__':
-    #calculate_yearly()
+    calculate_yearly()
     check_yearly()
