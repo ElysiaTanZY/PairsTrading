@@ -5,7 +5,7 @@ import seaborn as sns
 import statistics
 from tabulate import tabulate
 
-from WIP import populate_result
+from Final import populate_result
 
 # Models whose clusters are to be analysed (to be updated as required)
 models = ['dbscan', 'baseline']

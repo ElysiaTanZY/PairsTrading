@@ -2,7 +2,7 @@ import json
 import math
 import pandas as pd
 
-from WIP import pre_process_data, baseline, dbscan, kmedoids, fuzzyk, trade
+from Final import pre_process_data, baseline, dbscan, kmedoids, fuzzyk, trade
 
 # Data Files
 date_cols = ['date']

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import statistics
 from tabulate import tabulate
 
-from WIP import calculate_metrics, generate_charts, populate_result
+from Final import calculate_metrics, generate_charts, populate_result
 
 # Compare ML clustering with baseline cluster by industry groups (baseline_model: baseline)
 ml_models = ["baseline", "dbscan", "fuzzy", "kmedoids"]

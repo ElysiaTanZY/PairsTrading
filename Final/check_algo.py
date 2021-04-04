@@ -3,7 +3,7 @@ import pandas as pd
 import math
 
 
-with open('/Users/elysiatan/PycharmProjects/thesis/WIP/volume.json') as json_file:
+with open('/Final/volume.json') as json_file:
     vol = json.load(json_file)
 
 with open('/Users/elysiatan/PycharmProjects/thesis/Backup/result.json') as json_file:

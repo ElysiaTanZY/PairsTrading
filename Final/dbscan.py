@@ -6,7 +6,7 @@ from sklearn import metrics
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
 
-from WIP import cointegration_test
+from Final import cointegration_test
 
 
 def dbscan_main(dataset, index_mapping, share_list, p_value=0.05):

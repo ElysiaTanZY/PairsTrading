@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from sklearn import metrics
 from sklearn_extra.cluster import KMedoids
 
-from WIP import cointegration_test
+from Final import cointegration_test
 
 
 def kmedoid_main(dataset, index_mapping, share_list, p_value=0.05):

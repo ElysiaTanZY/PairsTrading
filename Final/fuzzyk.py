@@ -1,7 +1,7 @@
 import math
 import skfuzzy as fuzz
 
-from WIP import cointegration_test
+from Final import cointegration_test
 
 
 def fuzzy_main(dataset, index_mapping, share_list, p_value=0.05):
