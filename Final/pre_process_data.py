@@ -22,7 +22,7 @@ def main(relevant_shares, firm_data, start_year, indicator=None, pca_variation=0
     :return: New features after PCA is done
     '''
 
-    with open('/Final/volume.json') as json_file:
+    with open('volume.json') as json_file:
         vol_data = json.load(json_file)
 
     extract_time_series_features(relevant_shares)
@@ -79,10 +79,10 @@ def consolidate_features(firm_data, vol_data, start_year, indicator):
         col_names.append(col_name)
 
     if indicator != 2:
-        time_series = pd.read_csv('/Final/sparse_features.csv', names=col_names, header=None)
+        time_series = pd.read_csv('sparse_features.csv', names=col_names, header=None)
         time_series['permno'] = time_series['permno'].astype(int)
     else:
-        permno_series = pd.read_csv('/Final/sparse_features.csv', names=col_names, header=None)
+        permno_series = pd.read_csv('sparse_features.csv', names=col_names, header=None)
         time_series = permno_series['permno'].to_frame()
 
     for i in range(start_year, start_year+3):

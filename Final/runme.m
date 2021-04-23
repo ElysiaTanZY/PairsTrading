@@ -1,5 +1,5 @@
 function runme(filename_1)
-file_dir='/Users/elysiatan/PycharmProjects/thesis/WIP/';
+file_dir='/Users/elysiatan/PycharmProjects/thesis/Final/';
 
 Train=load(strcat(file_dir,filename_1));
 
